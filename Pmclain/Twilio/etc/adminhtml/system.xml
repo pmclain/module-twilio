@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Pmclain_Twilio extension
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the GPL v3 License
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://www.gnu.org/licenses/gpl.txt
+ *
+ * @category       Pmclain
+ * @package        Twilio
+ * @copyright      Copyright (c) 2017
+ * @license        https://www.gnu.org/licenses/gpl.txt GPL v3 License
+ */
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+  <system>
+    <section id="sales_sms" translate="label" type="text" sortOrder="301" showInDefault="1" showInWebsite="1" showInStore="1">
+      <label>Sales SMS</label>
+      <tab>sales</tab>
+      <resource>Magento_Sales::sales_email</resource>
+      <group id="general" translate="label" type="text" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>General Settings</label>
+        <field id="enabled" translate="label" type="select" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Enabled</label>
+          <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+        </field>
+        <field id="account_sid" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+          <label>Account SID</label>
+        </field>
+        <field id="auth_token" translate="label" type="obscure" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
+          <label>Auth Token</label>
+          <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+        </field>
+        <field id="twilio_phone" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
+          <label>Twilio Phone Number</label>
+          <comment>ex +1 313XXXXXXX</comment>
+        </field>
+      </group>
+      <group id="order" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>Order</label>
+        <field id="enabled" translate="label" type="select" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Enabled</label>
+          <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+        </field>
+        <field id="message" translate="label" type="textarea" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Message</label>
+          <comment><![CDATA[Variables: {{order.increment_id}}, {{order.qty}}, {{shipment.firstname}}, {{shipment.lastname}}, {{order.grandtotal}}, {{storename}}]]></comment>
+        </field>
+      </group>
+      <group id="shipment" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>Shipment</label>
+        <field id="enabled" translate="label" type="select" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Enabled</label>
+          <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+        </field>
+        <field id="message" translate="label" type="textarea" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Message</label>
+          <comment><![CDATA[Variables: {{shipment.qty}}, {{shipment.trackingnumber}}, {{shipment.increment_id}}, {{order.increment_id}}, {{order.qty}}, {{shipment.firstname}}, {{shipment.lastname}}, {{storename}}]]></comment>
+        </field>
+      </group>
+      <group id="invoice" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>Invoice</label>
+        <field id="enabled" translate="label" type="select" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Enabled</label>
+          <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+        </field>
+        <field id="message" translate="label" type="textarea" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Message</label>
+          <comment><![CDATA[Variables: {{invoice.qty}}, {{invoice.grandtotal}}, {{invoice.increment_id}}, {{order.increment_id}}, {{order.qty}}, {{shipment.firstname}}, {{shipment.firstname}}, {{storename}}]]></comment>
+        </field>
+      </group>
+      <!--<group id="credit_memo" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>Credit Memo</label>
+        <field id="enabled" translate="label" type="select" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Enabled</label>
+          <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+        </field>
+        <field id="message" translate="label" type="textarea" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Message</label>
+          <comment>ADD Variables</comment>
+        </field>
+      </group>-->
+    </section>
+  </system>
+</config>

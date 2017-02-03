@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Pmclain_Twilio extension
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the GPL v3 License
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://www.gnu.org/licenses/gpl.txt
+ *
+ * @category       Pmclain
+ * @package        Twilio
+ * @copyright      Copyright (c) 2017
+ * @license        https://www.gnu.org/licenses/gpl.txt GPL v3 License
+ */
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="urn:magento:framework:DataObject/etc/fieldset.xsd">
+  <scope id="global">
+    <fieldset id="customer_address">
+      <field name="sms_alert">
+        <aspect name="to_quote_address" />
+      </field>
+    </fieldset>
+    <fieldset id="sales_convert_quote_address">
+      <!-- TODO: WTF!!!! why don't custom attributes ever convert right from quote to order. -->
+      <field name="sms_alert">
+        <aspect name="to_order_address" />
+        <aspect name="to_customer_address" />
+      </field>
+    </fieldset>
+  </scope>
+</config>
