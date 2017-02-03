@@ -3,10 +3,10 @@
   "description": "Twilio SMS Notifications",
   "require": {
     "php": "~5.5.0|~5.6.0|~7.0.0",
-    "magento/framework": "100.0.*",
-    "magento/module-ui": "100.0.*",
-    "magento/module-config": "100.0.*",
-    "magento/module-checkout": "100.0.*",
+    "magento/framework": "100.*.*",
+    "magento/module-ui": "100.*.*",
+    "magento/module-config": "100.*.*",
+    "magento/module-checkout": "100.*.*",
     "twilio/sdk": "5.4.*"
   },
   "type": "magento2-module",
