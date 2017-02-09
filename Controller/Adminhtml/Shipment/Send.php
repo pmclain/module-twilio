@@ -26,6 +26,12 @@ use Pmclain\Twilio\Model\Adapter\Order\Shipment as ShipmentAdapter;
 
 class Send extends Action
 {
+  /**
+   * Authorization level of a basic admin session
+   * @see _isAllowed()
+   */
+  const ADMIN_RESOURCE = 'Pmclain_Twilio::sms';
+
   /** @var \Magento\Sales\Api\ShipmentRepositoryInterface */
   protected $_shipmentRepository;
 

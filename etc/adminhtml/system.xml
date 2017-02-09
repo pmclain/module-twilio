@@ -21,7 +21,7 @@
     <section id="sales_sms" translate="label" type="text" sortOrder="301" showInDefault="1" showInWebsite="1" showInStore="1">
       <label>Sales SMS</label>
       <tab>sales</tab>
-      <resource>Magento_Sales::sales_email</resource>
+      <resource>Pmclain_Twilio::sales_sms</resource>
       <group id="general" translate="label" type="text" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>General Settings</label>
         <field id="enabled" translate="label" type="select" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">

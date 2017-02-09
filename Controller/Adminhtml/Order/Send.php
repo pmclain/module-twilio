@@ -26,6 +26,12 @@ use Pmclain\Twilio\Model\Adapter\Order as OrderAdapter;
 
 class Send extends Action
 {
+  /**
+   * Authorization level of a basic admin session
+   * @see _isAllowed()
+   */
+  const ADMIN_RESOURCE = 'Pmclain_Twilio::sms';
+
   /** @var \Magento\Sales\Api\OrderRepositoryInterface */
   protected $_orderRepository;
 

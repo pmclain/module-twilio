@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Pmclain_Twilio extension
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the GPL v3 License
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://www.gnu.org/licenses/gpl.txt
+ *
+ * @category       Pmclain
+ * @package        Twilio
+ * @copyright      Copyright (c) 2017
+ * @license        https://www.gnu.org/licenses/gpl.txt GPL v3 License
+ */
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+  <acl>
+    <resources>
+      <resource id="Magento_Backend::admin">
+        <resource id="Magento_Sales::sales">
+          <resource id="Magento_Sales::sales_operation">
+            <resource id="Magento_Sales::sales_order">
+              <resource id="Magento_Sales::actions">
+                <resource id="Pmclain_Twilio::sms" title="Send Order SMS" translate="title" sortOrder="35" />
+              </resource>
+            </resource>
+          </resource>
+        </resource>
+        <resource id="Magento_Backend::stores">
+          <resource id="Magento_Backend::stores_settings">
+            <resource id="Magento_Config::config">
+              <resource id="Pmclain_Twilio::sales_sms" title="Sales SMS Section" translate="title" sortOrder="68" />
+            </resource>
+          </resource>
+        </resource>
+      </resource>
+    </resources>
+  </acl>
+</config>
