@@ -58,21 +58,16 @@ class Send extends Action
 
       $order = $invoice->getOrder();
 
-      /** TODO: this is not clean */
-      if(!$shippingAddress = $order->getShippingAddress()) {
-        $this->messageManager->addErrorMessage(__('The order does not have a shipping address.'));
+      $billingAddress = $order->getBillingAddress();
 
-        return $resultRedirect;
-      }
-
-      if($shippingAddress->getSmsAlert()) {
+      if($billingAddress->getSmsAlert()) {
         $result = $this->_invoiceAdapter->sendOrderSms($invoice);
         $this->messageManager->addSuccessMessage(__('The SMS has been sent.'));
 
         return $resultRedirect;
       }
 
-      $this->messageManager->addErrorMessage(__('The shipping telephone number did not opt-in for SMS notifications.'));
+      $this->messageManager->addErrorMessage(__('The billing telephone number did not opt-in for SMS notifications.'));
 
       return $resultRedirect;
     }

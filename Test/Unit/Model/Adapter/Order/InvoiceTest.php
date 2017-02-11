@@ -159,12 +159,12 @@ class InvoiceTest extends \PHPUnit_Framework_TestCase
       ->setMethods([
         'getIncrementId', 'getTotalQtyOrdered', 'getCustomerFirstname',
         'getCustomerLastname', 'getGrandTotal', 'getStoreName',
-        'getShippingAddress'
+        'getBillingAddress'
       ])
       ->getMock();
 
     $this->orderMock->expects($this->atLeastOnce())
-      ->method('getShippingAddress')
+      ->method('getBillingAddress')
       ->willReturn($this->addressMock);
 
     $this->orderMock->expects($this->once())

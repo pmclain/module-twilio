@@ -43,7 +43,6 @@ class OrderAfter implements ObserverInterface
 
   /**
    * @param \Magento\Framework\Event\Observer $observer
-   * @var \Magento\Sales\Model\Order $order
    * @return \Magento\Framework\Event\Observer
    */
   public function execute(\Magento\Framework\Event\Observer $observer)
@@ -52,9 +51,9 @@ class OrderAfter implements ObserverInterface
 
     $order = $observer->getOrder();
 
-    if(!$shippingAddress = $order->getShippingAddress()) { return $observer; }
+    $billingAddress = $order->getBillingAddress();
 
-    if($shippingAddress->getSmsAlert()) {
+    if($billingAddress->getSmsAlert()) {
       $this->_orderAdapter->sendOrderSms($order);
     }
 

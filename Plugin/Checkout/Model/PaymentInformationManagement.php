@@ -17,21 +17,16 @@
 
 namespace Pmclain\Twilio\Plugin\Checkout\Model;
 
-class ShippingInformationManagement
+class PaymentInformationManagement
 {
-  public function beforeSaveAddressInformation(
-    \Magento\Checkout\Model\ShippingInformationManagement $subject,
-    $cartId,
-    \Magento\Checkout\Api\Data\ShippingInformationInterface $addressInformation
-  ) {
-    $shippingAddress = $addressInformation->getShippingAddress();
-    $billingAddress = $addressInformation->getBillingAddress();
 
-    if ($shippingAddress->getExtensionAttributes()) {
-      $shippingAddress->setSmsAlert((int)$shippingAddress->getExtensionAttributes()->getSmsAlert());
-    }else {
-      $shippingAddress->setSmsAlert(0);
-    }
+  public function beforeSavePaymentInformation(
+    \Magento\Checkout\Model\PaymentInformationManagement $subject,
+    $cartId,
+    \Magento\Quote\Api\Data\PaymentInterface $paymentMethod,
+    \Magento\Quote\Api\Data\AddressInterface $billingAddress = null
+  ) {
+    if (!$billingAddress) { return; }
 
     if ($billingAddress->getExtensionAttributes()) {
       $billingAddress->setSmsAlert((int)$billingAddress->getExtensionAttributes()->getSmsAlert());

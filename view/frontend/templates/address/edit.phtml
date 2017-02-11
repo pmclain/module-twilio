@@ -41,7 +41,8 @@
       </div>
     </div>
     <div class="field choice sms-alert">
-      <input type="checkbox" name="sms_alert" value="1" title="<?php echo __('Send SMS order notifications'); ?>" id="sms_alert" <?php echo $block->getAddress()->getCustomAttribute('sms_alert')->getValue() === '1' ? 'checked' : ''; ?>>
+      <?php $smsAlert = $block->getAddress()->getCustomAttribute('sms_alert') ? $block->getAddress()->getCustomAttribute('sms_alert')->getValue() : false; ?>
+      <input type="checkbox" name="sms_alert" value="1" title="<?php echo __('Send SMS order notifications'); ?>" id="sms_alert" <?php echo $smsAlert === '1' ? 'checked' : ''; ?>>
       <label for="sms_alert" class="label">
         <span><?php echo __('Send SMS notifications to the telephone number above.'); ?></span>
       </label>

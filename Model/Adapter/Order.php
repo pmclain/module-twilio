@@ -36,7 +36,7 @@ class Order extends AdapterAbstract
 
     //TODO: something needs to verify the phone number
     //      and add country code
-    $this->_recipientPhone = '+1' . $order->getShippingAddress()->getTelephone();
+    $this->_recipientPhone = '+1' . $order->getBillingAddress()->getTelephone();
 
     try {
       $this->_smsStatus = $this->_sendSms();
@@ -56,8 +56,8 @@ class Order extends AdapterAbstract
 
     $vars['order.increment_id'] = $order->getIncrementId();
     $vars['order.qty'] = $order->getTotalQtyOrdered();
-    $vars['shipment.firstname'] = $order->getShippingAddress()->getFirstname();
-    $vars['shipment.lastname'] = $order->getShippingAddress()->getLastname();
+    $vars['billing.firstname'] = $order->getBillingAddress()->getFirstname();
+    $vars['billing.lastname'] = $order->getBillingAddress()->getLastname();
     $vars['order.grandtotal'] = $order->getGrandTotal(); //TODO: not properly formatted
     $vars['storename'] = $this->_storeManager->getWebsite(
         $this->_storeManager->getStore($order->getStoreId())->getWebsiteId()
