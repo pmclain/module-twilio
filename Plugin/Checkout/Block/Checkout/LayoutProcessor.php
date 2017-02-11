@@ -46,18 +46,19 @@ class LayoutProcessor
   ) {
     if(!$this->_helper->isTwilioEnabled()) { return $jsLayout; }
 
+    //Add to shipping form
     $jsLayout['components']['checkout']['children']['steps']['children']['shipping-step']['children']
     ['shippingAddress']['children']['shipping-address-fieldset']['children']['sms_alert'] = [
       'component' => 'Magento_Ui/js/form/element/abstract',
       'config' => [
-        'customScope' => 'shippingAddress',
+        'customScope' => 'shippingAddress.custom_attributes',
         'template' => 'ui/form/field',
         'elementTmpl' => 'ui/form/element/checkbox',
         'custom_entry' => null,
       ],
       'dataScope' => 'shippingAddress.custom_attributes.sms_alert',
-      'label' => 'SMS Order Notifications',
-      'description' => 'Send SMS order notifications to the phone number above.',
+      'label' => __('SMS Order Notifications'),
+      'description' => __('Send SMS order notifications to the phone number above.'),
       'provider' => 'checkoutProvider',
       'visible' => true,
       'checked' => true,
@@ -65,6 +66,34 @@ class LayoutProcessor
       'sortOrder' => 125,
       'custom_entry' => null,
     ];
+
+    //Add to billing form
+    /*$billingConfiguration = $jsLayout['components']['checkout']['children']['steps']['children']['billing-step']['children']['payment']['children']['payments-list']['children'];
+    foreach($billingConfiguration as $paymentGroup => $groupConfig) {
+      if (isset($groupConfig['component']) AND $groupConfig['component'] === 'Magento_Checkout/js/view/billing-address') {
+
+        $jsLayout['components']['checkout']['children']['steps']['children']['billing-step']['children']
+        ['payment']['children']['payments-list']['children'][$paymentGroup]['children']['form-fields']['children']['custom_attribute_code'] = [
+          'component' => 'Magento_Ui/js/form/element/abstract',
+          'config' => [
+            'template' => 'ui/form/field',
+            'elementTmpl' => 'ui/form/element/checkbox',
+            'custom_entry' => null,
+            'id' => 'sms_alert',
+          ],
+          'dataScope' => $groupConfig['dataScopePrefix'] . '.sms_alert',
+          'label' => __('SMS Order Notifications'),
+          'description' => __('Send SMS order notifications to the phone number above.'),
+          'provider' => 'checkoutProvider',
+          'visible' => true,
+          'checked' => true,
+          'validation' => [],
+          'sortOrder' => 125,
+          'custom_entry' => null,
+          'id' => 'sms_alert'
+        ];
+      }
+    }*/
 
     return $jsLayout;
   }

@@ -26,6 +26,12 @@ use Pmclain\Twilio\Model\Adapter\Order as OrderAdapter;
 
 class Send extends Action
 {
+  /**
+   * Authorization level of a basic admin session
+   * @see _isAllowed()
+   */
+  const ADMIN_RESOURCE = 'Pmclain_Twilio::sms';
+
   /** @var \Magento\Sales\Api\OrderRepositoryInterface */
   protected $_orderRepository;
 
@@ -50,21 +56,16 @@ class Send extends Action
         ['order_id' => $order->getEntityId()]
       );
 
-      /** TODO: this is not clean */
-      if(!$shippingAddress = $order->getShippingAddress()) {
-        $this->messageManager->addErrorMessage(__('The order does not have a shipping address.'));
+      $billingAddress = $order->getBillingAddress();
 
-        return $resultRedirect;
-      }
-
-      if($shippingAddress->getSmsAlert()) {
+      if($billingAddress->getSmsAlert()) {
         $result = $this->_orderAdapter->sendOrderSms($order);
         $this->messageManager->addSuccessMessage(__('The SMS has been sent.'));
 
         return $resultRedirect;
       }
 
-      $this->messageManager->addErrorMessage(__('The shipping telephone number did not opt-in for SMS notifications.'));
+      $this->messageManager->addErrorMessage(__('The billing telephone number did not opt-in for SMS notifications.'));
 
       return $resultRedirect;
     }

@@ -61,7 +61,7 @@ class OrderAfterTest extends \PHPUnit_Framework_TestCase
 
     $this->orderMock = $this->getMockBuilder(Order::class)
       ->disableOriginalConstructor()
-      ->setMethods(['getShippingAddress'])
+      ->setMethods(['getBillingAddress'])
       ->getMock();
 
     $this->addressMock = $this->getMockBuilder(Address::class)
@@ -93,7 +93,7 @@ class OrderAfterTest extends \PHPUnit_Framework_TestCase
       ->willReturn($this->orderMock);
 
     $this->orderMock->expects($this->once())
-      ->method('getShippingAddress')
+      ->method('getBillingAddress')
       ->willReturn($this->addressMock);
 
     $this->addressMock->expects($this->once())
@@ -118,34 +118,12 @@ class OrderAfterTest extends \PHPUnit_Framework_TestCase
       ->willReturn($this->orderMock);
 
     $this->orderMock->expects($this->once())
-      ->method('getShippingAddress')
+      ->method('getBillingAddress')
       ->willReturn($this->addressMock);
 
     $this->addressMock->expects($this->once())
       ->method('getSmsAlert')
       ->willReturn(false);
-
-    $this->orderAdapterMock->expects($this->never())
-      ->method('sendOrderSms');
-
-    $this->orderAfter->execute($this->observerMock);
-  }
-
-  public function testExecuteWithoutShippingAddress() {
-    $this->helperMock->expects($this->once())
-      ->method('isTwilioEnabled')
-      ->willReturn(true);
-
-    $this->observerMock->expects($this->once())
-      ->method('getOrder')
-      ->willReturn($this->orderMock);
-
-    $this->orderMock->expects($this->once())
-      ->method('getShippingAddress')
-      ->willReturn(null);
-
-    $this->addressMock->expects($this->never())
-      ->method('getSmsAlert');
 
     $this->orderAdapterMock->expects($this->never())
       ->method('sendOrderSms');
