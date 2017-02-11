@@ -38,7 +38,7 @@ class Invoice extends AdapterAbstract
 
     //TODO: something needs to verify the phone number
     //      and add country code
-    $this->_recipientPhone = '+1' . $order->getShippingAddress()->getTelephone();
+    $this->_recipientPhone = '+1' . $order->getBillingAddress()->getTelephone();
 
     try {
       $this->_smsStatus = $this->_sendSms();
@@ -61,8 +61,8 @@ class Invoice extends AdapterAbstract
     $vars['invoice.increment_id'] = $invoice->getIncrementId();
     $vars['order.increment_id'] = $invoice->getOrder()->getIncrementId();
     $vars['order.qty'] = $invoice->getOrder()->getTotalQtyOrdered();
-    $vars['shipment.firstname'] = $invoice->getOrder()->getShippingAddress()->getFirstname();
-    $vars['shipment.lastname'] = $invoice->getOrder()->getShippingAddress()->getLastname();
+    $vars['billing.firstname'] = $invoice->getOrder()->getBillingAddress()->getFirstname();
+    $vars['billing.lastname'] = $invoice->getOrder()->getBillingAddress()->getLastname();
     $vars['storename'] = $this->_storeManager->getWebsite(
         $this->_storeManager->getStore($invoice->getOrder()->getStoreId())->getWebsiteId()
       )->getName();

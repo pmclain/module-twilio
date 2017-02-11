@@ -48,7 +48,7 @@
         </field>
         <field id="message" translate="label" type="textarea" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Message</label>
-          <comment><![CDATA[Variables: {{order.increment_id}}, {{order.qty}}, {{shipment.firstname}}, {{shipment.lastname}}, {{order.grandtotal}}, {{storename}}]]></comment>
+          <comment><![CDATA[Variables: {{order.increment_id}}, {{order.qty}}, {{billing.firstname}}, {{billing.lastname}}, {{order.grandtotal}}, {{storename}}]]></comment>
         </field>
       </group>
       <group id="shipment" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -70,7 +70,7 @@
         </field>
         <field id="message" translate="label" type="textarea" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Message</label>
-          <comment><![CDATA[Variables: {{invoice.qty}}, {{invoice.grandtotal}}, {{invoice.increment_id}}, {{order.increment_id}}, {{order.qty}}, {{shipment.firstname}}, {{shipment.firstname}}, {{storename}}]]></comment>
+          <comment><![CDATA[Variables: {{invoice.qty}}, {{invoice.grandtotal}}, {{invoice.increment_id}}, {{order.increment_id}}, {{order.qty}}, {{billing.firstname}}, {{billing.firstname}}, {{storename}}]]></comment>
         </field>
       </group>
       <!--<group id="credit_memo" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">

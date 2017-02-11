@@ -150,7 +150,7 @@ class SendTest extends \PHPUnit_Framework_TestCase
 
     $this->orderMock = $this->getMockBuilder(Order::class)
       ->disableOriginalConstructor()
-      ->setMethods(['getShippingAddress'])
+      ->setMethods(['getBillingAddress'])
       ->getMock();
 
     $this->addressMock = $this->getMockBuilder(Address::class)
@@ -232,7 +232,7 @@ class SendTest extends \PHPUnit_Framework_TestCase
       ->willReturn($this->orderMock);
 
     $this->orderMock->expects($this->once())
-      ->method('getShippingAddress')
+      ->method('getBillingAddress')
       ->willReturn($this->addressMock);
 
     $this->addressMock->expects($this->once())
@@ -291,7 +291,7 @@ class SendTest extends \PHPUnit_Framework_TestCase
       ->willReturn($this->orderMock);
 
     $this->orderMock->expects($this->once())
-      ->method('getShippingAddress')
+      ->method('getBillingAddress')
       ->willReturn($this->addressMock);
 
     $this->addressMock->expects($this->once())
@@ -303,7 +303,7 @@ class SendTest extends \PHPUnit_Framework_TestCase
 
     $this->messageManagerMock->expects($this->once())
       ->method('addErrorMessage')
-      ->with('The shipping telephone number did not opt-in for SMS notifications.')
+      ->with('The billing telephone number did not opt-in for SMS notifications.')
       ->willReturnSelf();
 
     $this->resultRedirectMock->expects($this->once())

@@ -53,9 +53,9 @@ class Register implements ObserverInterface
     $invoice = $observer->getInvoice();
     $order = $invoice->getOrder();
 
-    if (!$shippingAddress = $order->getShippingAddress()) { return $observer; }
+    $billingAddress = $order->getBillingAddress();
 
-    if($shippingAddress->getSmsAlert()) {
+    if($billingAddress->getSmsAlert()) {
       $this->_invoiceAdapter->sendOrderSms($invoice);
     }
 

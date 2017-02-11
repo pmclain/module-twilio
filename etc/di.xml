@@ -23,4 +23,10 @@
   <type name="Magento\Checkout\Model\ShippingInformationManagement">
     <plugin name="wms_twilio_model_shippinginformationmanagement" type="Pmclain\Twilio\Plugin\Checkout\Model\ShippingInformationManagement" sortOrder="10" />
   </type>
+  <type name="Magento\Checkout\Model\PaymentInformationManagement">
+    <plugin name="wms_twilio_model_paymentinformationmanagement" type="Pmclain\Twilio\Plugin\Checkout\Model\PaymentInformationManagement" sortOrder="10" />
+  </type>
+  <type name="Magento\Checkout\Model\GuestPaymentInformationManagement">
+    <plugin name="wms_twilio_model_guestpaymentinformationmanagement" type="Pmclain\Twilio\Plugin\Checkout\Model\GuestPaymentInformationManagement" sortOrder="10" />
+  </type>
 </config>
