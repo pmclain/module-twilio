@@ -78,8 +78,18 @@ class Data extends AbstractHelper
     );
   }
 
+  /**
+   * @return string
+   */
   public function getTwilioPhone() {
     return $this->scopeConfig->getValue(self::GENERAL_CONFIG_PATH . 'twilio_phone', ScopeInterface::SCOPE_STORE);
+  }
+
+  /**
+   * @return bool
+   */
+  public function isLogEnabled() {
+    return $this->scopeConfig->getValue(self::GENERAL_CONFIG_PATH . 'log_enabled', ScopeInterface::SCOPE_STORE);
   }
 
   /**

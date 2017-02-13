@@ -73,7 +73,7 @@ class InvoiceTest extends \PHPUnit_Framework_TestCase
       ->disableOriginalConstructor()
       ->setMethods([
         'isInvoiceMessageEnabled', 'getRawInvoiceMessage', 'getAccountSid',
-        'getAccountAuthToken', 'getTwilioPhone'
+        'getAccountAuthToken', 'getTwilioPhone', 'isLogEnabled'
       ])
       ->getMock();
 
@@ -92,6 +92,9 @@ class InvoiceTest extends \PHPUnit_Framework_TestCase
     $this->helperMock->expects($this->once())
       ->method('getTwilioPhone')
       ->willReturn('5559285362');
+    $this->helperMock->expects($this->once())
+      ->method('isLogEnabled')
+      ->willReturn(false);
 
     $this->storeManager = $this->getMockForAbstractClass(
       StoreManagerInterface::class,

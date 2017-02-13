@@ -15,13 +15,15 @@
  * @license        https://www.gnu.org/licenses/gpl.txt GPL v3 License
  */
 
-namespace Pmclain\Twilio\Test\Unit\Controller\Adminhtml\Usage;
+namespace Pmclain\Twilio\Api;
 
-use PHPUnit_Framework_MockObject_MockObject as MockObject;
-use Pmclain\Twilio\Controller\Adminhtml\Usage\Index;
-use Magento\Backend\App\Action\Context;
-
-class SendTest extends \PHPUnit_Framework_TestCase
+interface LogRepositoryInterface
 {
+  public function save(\Pmclain\Twilio\Api\Data\LogInterface $log);
 
+  public function getById($logId);
+
+  public function getList(\Magento\Framework\Api\SearchCriteriaInterface $searchCriteria);
+
+  public function delete($logId);
 }

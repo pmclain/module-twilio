@@ -17,11 +17,15 @@
  */
 -->
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+  <head>
+    <css src="Pmclain_Twilio::css/styles.css" />
+  </head>
   <body>
     <referenceContainer name="content">
       <block class="Pmclain\Twilio\Block\Adminhtml\Usage\Index"
              name="twilio.usage.index"
              template="Pmclain_Twilio::usage/index.phtml" />
+      <uiComponent name="twilio_log_listing" />
     </referenceContainer>
   </body>
 </page>

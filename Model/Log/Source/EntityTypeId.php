@@ -1,5 +1,4 @@
-<?xml version="1.0"?>
-<!--
+<?php
 /**
  * Pmclain_Twilio extension
  *
@@ -15,12 +14,18 @@
  * @copyright      Copyright (c) 2017
  * @license        https://www.gnu.org/licenses/gpl.txt GPL v3 License
  */
- -->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
-  <module name="Pmclain_Twilio" setup_version="0.0.3">
-    <sequence>
-      <module name="Magento_Checkout" />
-      <module name="Magento_Sales" />
-    </sequence>
-  </module>
-</config>
+
+namespace Pmclain\Twilio\Model\Log\Source;
+
+use Magento\Framework\Data\OptionSourceInterface;
+
+class EntityTypeId implements OptionSourceInterface
+{
+  public function toOptionArray() {
+    return [
+      ['label' => 'Order', 'value' => 1],
+      ['label' => 'Invoice', 'value' => 2],
+      ['label' => 'Shipment', 'value' => 3]
+    ];
+  }
+}

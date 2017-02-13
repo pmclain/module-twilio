@@ -22,6 +22,8 @@ use Magento\Sales\Model\Order as SalesOrder;
 
 class Order extends AdapterAbstract
 {
+  const ENTITY_TYPE_ID = 1;
+
   /**
    * @param \Magento\Sales\Model\Order $order
    * @return \Pmclain\Twilio\Model\Adapter\Order
@@ -39,10 +41,16 @@ class Order extends AdapterAbstract
     $this->_recipientPhone = '+1' . $order->getBillingAddress()->getTelephone();
 
     try {
-      $this->_smsStatus = $this->_sendSms();
+      $result = $this->_sendSms();
+      $this->_smsStatus = $result->status;
+      $this->_hasError = false;
     }catch (\Exception $e) {
       $this->_logger->addCritical($e->getMessage());
+      $this->_smsStatus = $e->getMessage();
+      $this->_hasError = true;
     }
+
+    $this->_logResult($order->getId(), self::ENTITY_TYPE_ID);
 
     return $this;
   }

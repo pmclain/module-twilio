@@ -18,19 +18,63 @@
 /** @var \Pmclain\Twilio\Block\Adminhtml\Usage\Index $block */
 ?>
 
-<p><em>**</em>Some disclaimer about how the report something, something, blah, blah is not an offical Twilio bill.</p>
+<p><em>**</em>Usage data is provided for informational purposes only and may not accurately reflect all charges in your Twilio account.</p>
 
-<?php $today = $block->getUsageToday(); ?>
-<h3>Today</h3>
-<p>Count: <?php echo $today['count']; ?></p>
-<p>Price: <?php echo $today['price']; ?></p>
-<br />
-<?php $mtd = $block->getMtdUsage(); ?>
-<h3>Month to Date</h3>
-<p>Count: <?php echo $mtd['count']; ?></p>
-<p>Price: <?php echo $mtd['price']; ?></p>
-<br />
-<?php $lastMonth = $block->getLastMonthUseage(); ?>
-<h3>Last Month</h3>
-<p>Count: <?php echo $lastMonth['count']; ?></p>
-<p>Price: <?php echo $lastMonth['price']; ?></p>
+<section class="admin__page-section twilio-usage-statistics">
+  <div class="admin__page-section-content">
+    <div class="admin__page-section-item">
+      <div class="admin__page-section-item-title">Today</div>
+      <div class="admin__page-section-item-content">
+        <?php $today = $block->getUsageToday(); ?>
+        <table class="admin__table-secondary">
+          <tbody>
+            <tr>
+              <th>Count</th>
+              <td><?php echo $today['count'] ?></td>
+            </tr>
+            <tr>
+              <th>Price</th>
+              <td><?php echo $today['price'] ?></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="admin__page-section-item">
+      <div class="admin__page-section-item-title">This Month</div>
+      <div class="admin__page-section-item-content">
+        <?php $mtd = $block->getMtdUsage(); ?>
+        <table class="admin__table-secondary">
+          <tbody>
+          <tr>
+            <th>Count</th>
+            <td><?php echo $mtd['count'] ?></td>
+          </tr>
+          <tr>
+            <th>Price</th>
+            <td><?php echo $mtd['price'] ?></td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="admin__page-section-item">
+      <div class="admin__page-section-item-title">Last Month</div>
+      <div class="admin__page-section-item-content">
+        <?php $lastMonth = $block->getLastMonthUseage(); ?>
+        <table class="admin__table-secondary">
+          <tbody>
+          <tr>
+            <th>Count</th>
+            <td><?php echo $lastMonth['count'] ?></td>
+          </tr>
+          <tr>
+            <th>Price</th>
+            <td><?php echo $lastMonth['price'] ?></td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>

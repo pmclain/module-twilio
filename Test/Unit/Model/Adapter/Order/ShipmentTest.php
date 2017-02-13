@@ -77,7 +77,7 @@ class ShipmentTest extends \PHPUnit_Framework_TestCase
       ->disableOriginalConstructor()
       ->setMethods([
         'isShipmentMessageEnabled', 'getRawShipmentMessage', 'getAccountSid',
-        'getAccountAuthToken', 'getTwilioPhone'
+        'getAccountAuthToken', 'getTwilioPhone', 'isLogEnabled'
       ])
       ->getMock();
 
@@ -96,6 +96,9 @@ class ShipmentTest extends \PHPUnit_Framework_TestCase
     $this->helperMock->expects($this->once())
       ->method('getTwilioPhone')
       ->willReturn('5559285362');
+    $this->helperMock->expects($this->once())
+      ->method('isLogEnabled')
+      ->willReturn(false);
 
     $this->storeManager = $this->getMockForAbstractClass(
       StoreManagerInterface::class,

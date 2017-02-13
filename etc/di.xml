@@ -28,5 +28,37 @@
   </type>
   <type name="Magento\Checkout\Model\GuestPaymentInformationManagement">
     <plugin name="wms_twilio_model_guestpaymentinformationmanagement" type="Pmclain\Twilio\Plugin\Checkout\Model\GuestPaymentInformationManagement" sortOrder="10" />
+  </type>https://webkul.com/blog/cs-cart-msg91-sms-notification/
+
+  <preference for="Pmclain\Twilio\Api\LogRepositoryInterface" type="Pmclain\Twilio\Model\LogRepository" />
+  <preference for="Pmclain\Twilio\Api\Data\LogInterface" type="Pmclain\Twilio\Model\Log" />
+  <preference for="Pmclain\Twilio\Api\Data\LogSearchResultsInterface" type="Magento\Framework\Api\SearchResults" />
+
+  <virtualType name="TwilioLogGridFilterPool" type="Magento\Framework\View\Element\UiComponent\DataProvider\FilterPool">
+    <arguments>
+      <argument name="appliers" xsi:type="array">
+        <item name="regular" xsi:type="object">Magento\Framework\View\Element\UiComponent\DataProvider\RegularFilter</item>
+        <item name="fulltext" xsi:type="object">Magento\Framework\View\Element\UiComponent\DataProvider\FulltextFilter</item>
+      </argument>
+    </arguments>
+  </virtualType>
+  <virtualType name="TwilioLogGridDataProvider" type="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider">
+    <arguments>
+      <argument name="collection" xsi:type="object" shared="false">Pmclain\Twilio\Model\ResourceModel\Log\Collection</argument>
+      <argument name="filterPool" xsi:type="object" shared="false">TwilioLogGridFilterPool</argument>
+    </arguments>
+  </virtualType>
+  <virtualType name="Pmclain\Twilio\Model\ResourceModel\Log\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+    <arguments>
+      <argument name="mainTable" xsi:type="string">pmclain_twilio_log</argument>
+      <argument name="resourceModel" xsi:type="string">Pmclain\Twilio\Model\ResourceModel\Log</argument>
+    </arguments>
+  </virtualType>
+  <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+    <arguments>
+      <argument name="collections" xsi:type="array">
+        <item name="twilio_log_listing_data_source" xsi:type="string">Pmclain\Twilio\Model\ResourceModel\Log\Grid\Collection</item>
+      </argument>
+    </arguments>
   </type>
 </config>
