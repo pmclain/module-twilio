@@ -1,5 +1,4 @@
-<?xml version="1.0"?>
-<!--
+<?php
 /**
  * Pmclain_Twilio extension
  *
@@ -15,12 +14,14 @@
  * @copyright      Copyright (c) 2017
  * @license        https://www.gnu.org/licenses/gpl.txt GPL v3 License
  */
- -->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
-  <module name="Pmclain_Twilio" setup_version="0.0.3">
-    <sequence>
-      <module name="Magento_Checkout" />
-      <module name="Magento_Sales" />
-    </sequence>
-  </module>
-</config>
+
+namespace Pmclain\Twilio\Api\Data;
+
+use Magento\Framework\Api\SearchResultsInterface;
+
+interface LogSearchResultsInterface extends SearchResultsInterface
+{
+  public function getItems();
+
+  public function setItems(array $items);
+}

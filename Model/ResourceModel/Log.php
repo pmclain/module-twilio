@@ -1,5 +1,4 @@
-<?xml version="1.0"?>
-<!--
+<?php
 /**
  * Pmclain_Twilio extension
  *
@@ -15,12 +14,17 @@
  * @copyright      Copyright (c) 2017
  * @license        https://www.gnu.org/licenses/gpl.txt GPL v3 License
  */
- -->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
-  <module name="Pmclain_Twilio" setup_version="0.0.3">
-    <sequence>
-      <module name="Magento_Checkout" />
-      <module name="Magento_Sales" />
-    </sequence>
-  </module>
-</config>
+
+namespace Pmclain\Twilio\Model\ResourceModel;
+
+use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
+
+class Log extends AbstractDb
+{
+  /**
+   * @return void
+   */
+  protected function _construct() {
+    $this->_init('pmclain_twilio_log', 'id');
+  }
+}

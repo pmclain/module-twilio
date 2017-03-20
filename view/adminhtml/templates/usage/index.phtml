@@ -1,0 +1,80 @@
+<?php
+/**
+ * Pmclain_Twilio extension
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the GPL v3 License
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://www.gnu.org/licenses/gpl.txt
+ *
+ * @category       Pmclain
+ * @package        Twilio
+ * @copyright      Copyright (c) 2017
+ * @license        https://www.gnu.org/licenses/gpl.txt GPL v3 License
+ */
+
+/** @var \Pmclain\Twilio\Block\Adminhtml\Usage\Index $block */
+?>
+
+<p><em>**</em>Usage data is provided for informational purposes only and may not accurately reflect all charges in your Twilio account.</p>
+
+<section class="admin__page-section twilio-usage-statistics">
+  <div class="admin__page-section-content">
+    <div class="admin__page-section-item">
+      <div class="admin__page-section-item-title">Today</div>
+      <div class="admin__page-section-item-content">
+        <?php $today = $block->getUsageToday(); ?>
+        <table class="admin__table-secondary">
+          <tbody>
+            <tr>
+              <th>Count</th>
+              <td><?php echo $today['count'] ?></td>
+            </tr>
+            <tr>
+              <th>Price</th>
+              <td><?php echo $today['price'] ?></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="admin__page-section-item">
+      <div class="admin__page-section-item-title">This Month</div>
+      <div class="admin__page-section-item-content">
+        <?php $mtd = $block->getMtdUsage(); ?>
+        <table class="admin__table-secondary">
+          <tbody>
+          <tr>
+            <th>Count</th>
+            <td><?php echo $mtd['count'] ?></td>
+          </tr>
+          <tr>
+            <th>Price</th>
+            <td><?php echo $mtd['price'] ?></td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="admin__page-section-item">
+      <div class="admin__page-section-item-title">Last Month</div>
+      <div class="admin__page-section-item-content">
+        <?php $lastMonth = $block->getLastMonthUseage(); ?>
+        <table class="admin__table-secondary">
+          <tbody>
+          <tr>
+            <th>Count</th>
+            <td><?php echo $lastMonth['count'] ?></td>
+          </tr>
+          <tr>
+            <th>Price</th>
+            <td><?php echo $lastMonth['price'] ?></td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>

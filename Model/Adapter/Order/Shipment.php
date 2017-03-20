@@ -22,6 +22,7 @@ use Magento\Sales\Model\Order\Shipment as SalesShipment;
 
 class Shipment extends AdapterAbstract
 {
+  const ENTITY_TYPE_ID = 3;
   /**
    * @param \Magento\Sales\Model\Order\Shipment $shipment
    * @return \Pmclain\Twilio\Model\Adapter\Order\Shipment
@@ -41,10 +42,16 @@ class Shipment extends AdapterAbstract
     $this->_recipientPhone = '+1' . $order->getShippingAddress()->getTelephone();
 
     try {
-      $this->_smsStatus = $this->_sendSms();
+      $result = $this->_sendSms();
+      $this->_smsStatus = $result->status;
+      $this->_hasError = false;
     }catch (\Exception $e) {
       $this->_logger->addCritical($e->getMessage());
+      $this->_smsStatus = $e->getMessage();
+      $this->_hasError = true;
     }
+
+    $this->_logResult($order->getId(), self::ENTITY_TYPE_ID);
 
     return $this;
   }

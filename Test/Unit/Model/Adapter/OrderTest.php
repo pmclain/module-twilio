@@ -28,6 +28,9 @@ use Twilio\Rest\Api\V2010\Account\MessageList;
 use Psr\Log\LoggerInterface;
 use Pmclain\Twilio\Helper\MessageTemplateParser;
 use Magento\Store\Model\StoreManagerInterface;
+use Pmclain\Twilio\Model\Log;
+use Pmclain\Twilio\Model\LogRepository;
+use Pmclain\Twilio\Model\LogFactory;
 
 /** @codeCoverageIgnore */
 class OrderTest extends \PHPUnit_Framework_TestCase
@@ -62,6 +65,15 @@ class OrderTest extends \PHPUnit_Framework_TestCase
   /** @var \Magento\Store\Model\StoreManagerInterface|MockObject */
   protected $storeManager;
 
+  /** @var \Pmclain\Twilio\Model\Log|MockObject */
+  protected $logMock;
+
+  /** @var \Pmclain\Twilio\Model\LogFactory|MockObject */
+  protected $logFactoryMock;
+
+  /** @var \Pmclain\Twilio\Model\LogRepository|MockObject */
+  protected $logRespositoryMock;
+
   protected function setUp() {
     $objectManager = new \Magento\Framework\TestFramework\Unit\Helper\ObjectManager($this);
 
@@ -69,7 +81,7 @@ class OrderTest extends \PHPUnit_Framework_TestCase
       ->disableOriginalConstructor()
       ->setMethods([
         'isOrderMessageEnabled', 'getRawOrderMessage', 'getAccountSid',
-        'getAccountAuthToken', 'getTwilioPhone'
+        'getAccountAuthToken', 'getTwilioPhone', 'isLogEnabled'
       ])
       ->getMock();
 
@@ -169,6 +181,20 @@ class OrderTest extends \PHPUnit_Framework_TestCase
 
     $this->messageTemplateParser = $objectManager->getObject(MessageTemplateParser::class);
 
+    $this->logFactoryMock = $this->getMockBuilder(LogFactory::class)
+      ->disableOriginalConstructor()
+      ->setMethods(['create'])
+      ->getMock();
+
+    $this->logMock = $this->getMockBuilder(Log::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+
+    $this->logRespositoryMock = $this->getMockBuilder(LogRepository::class)
+      ->disableOriginalConstructor()
+      ->setMethods(['save'])
+      ->getMock();
+
     $this->orderAdapter = $objectManager->getObject(
       OrderAdapter::class,
       [
@@ -176,12 +202,34 @@ class OrderTest extends \PHPUnit_Framework_TestCase
         '_logger' => $this->loggerMock,
         '_twilioClientFactory' => $this->twilioClientFactoryMock,
         '_messageTemplateParser' => $this->messageTemplateParser,
-        '_storeManager' => $this->storeManager
+        '_storeManager' => $this->storeManager,
+        '_twilioLogFactory' => $this->logFactoryMock,
+        '_twilioLogRepository' => $this->logRespositoryMock
       ]
     );
   }
 
   public function testSendOrderSms() {
+    $this->helperMock->expects($this->once())
+      ->method('isLogEnabled')
+      ->willReturn(false);
+
+    $this->orderAdapter->sendOrderSms($this->orderMock);
+  }
+
+  public function testSendOrderSmsWithLog() {
+    $this->helperMock->expects($this->once())
+      ->method('isLogEnabled')
+      ->willReturn(true);
+
+    $this->logFactoryMock->expects($this->once())
+      ->method('create')
+      ->willReturn($this->logMock);
+
+    $this->logRespositoryMock->expects($this->once())
+      ->method('save')
+      ->willReturn('1');
+
     $this->orderAdapter->sendOrderSms($this->orderMock);
   }
 }
