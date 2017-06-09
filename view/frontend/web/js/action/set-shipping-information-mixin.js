@@ -24,6 +24,11 @@ define([
   return function (setShippingInformationAction) {
     return wrapper.wrap(setShippingInformationAction, function(originalAction) {
       var shippingAddress = quote.shippingAddress();
+
+      if(shippingAddress.customAttributes === undefined) {
+        shippingAddress.customAttributes = {};
+      }
+
       if(shippingAddress['extension_attributes'] === undefined) {
         shippingAddress['extension_attributes'] = {};
       }
