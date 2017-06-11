@@ -19,5 +19,12 @@ In your Magento 2 root directory run:
 Module settings are found in the Magento 2 admin panel under  
 Stores->Configuration->Sales->Sales SMS
 
+## Customer Address Templates
+If the system HTML Address Template has been edited the SMS notification value
+will not appear in the customer dashboard address book. Add the following to 
+Stores->Configuration->Customer->Customer Configuration->Address Templates->HTML
+where you wish this data to appear:  
+`{{depend sms_alert}}<br/>SMS Enabled: {{var sms_alert}}{{/depend}}`
+
 ## License
 GNU GENERAL PUBLIC LICENSE Version 3

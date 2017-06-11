@@ -15,12 +15,13 @@
  */
 
 define([
+  'jquery',
   'mage/utils/wrapper'
-], function(wrapper) {
+], function($, wrapper) {
   'use strict';
 
-  return function (createBillingAddressAction) {
-    return wrapper.wrap(createBillingAddressAction, function(originalAction, addressData) {
+  return function (createShippingAddressAction) {
+    return wrapper.wrap(createShippingAddressAction, function(originalAction, addressData) {
       if (addressData.custom_attributes === undefined) {
         return originalAction();
       }
