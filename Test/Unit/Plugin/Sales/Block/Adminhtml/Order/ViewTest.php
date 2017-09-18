@@ -26,114 +26,118 @@ use Magento\Sales\Model\Order;
 
 class ViewTest extends \PHPUnit_Framework_TestCase
 {
-  /** @var \Pmclain\Twilio\Plugin\Sales\Block\Adminhtml\Order\View */
-  protected $viewPlugin;
+    /** @var \Pmclain\Twilio\Plugin\Sales\Block\Adminhtml\Order\View */
+    protected $viewPlugin;
 
-  /** @var \Pmclain\Twilio\Helper\Data|MockObject */
-  protected $helperMock;
+    /** @var \Pmclain\Twilio\Helper\Data|MockObject */
+    protected $helperMock;
 
-  /** @var \Magento\Sales\Block\Adminhtml\Order\View|MockObject */
-  protected $orderViewMock;
+    /** @var \Magento\Sales\Block\Adminhtml\Order\View|MockObject */
+    protected $orderViewMock;
 
-  /** @var \Magento\Framework\AuthorizationInterface|MockObject */
-  protected $authorizationMock;
+    /** @var \Magento\Framework\AuthorizationInterface|MockObject */
+    protected $authorizationMock;
 
-  /** @var \Magento\Sales\Model\Order|MockObject */
-  protected $orderMock;
+    /** @var \Magento\Sales\Model\Order|MockObject */
+    protected $orderMock;
 
-  protected function setUp() {
-    $objectManager = new \Magento\Framework\TestFramework\Unit\Helper\ObjectManager($this);
+    protected function setUp()
+    {
+        $objectManager = new \Magento\Framework\TestFramework\Unit\Helper\ObjectManager($this);
 
-    $this->helperMock = $this->getMockBuilder(Data::class)
-      ->disableOriginalConstructor()
-      ->setMethods(['isOrderMessageEnabled'])
-      ->getMock();
+        $this->helperMock = $this->getMockBuilder(Data::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['isOrderMessageEnabled'])
+            ->getMock();
 
-    $this->orderViewMock = $this->getMockBuilder(OrderView::class)
-      ->disableOriginalConstructor()
-      ->setMethods(['addButton', 'getOrderId', 'getOrder'])
-      ->getMock();
+        $this->orderViewMock = $this->getMockBuilder(OrderView::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['addButton', 'getOrderId', 'getOrder'])
+            ->getMock();
 
-    $this->authorizationMock = $this->getMockBuilder(AuthorizationInterface::class)
-      ->disableOriginalConstructor()
-      ->setMethods(['isAllowed'])
-      ->getMockForAbstractClass();
+        $this->authorizationMock = $this->getMockBuilder(AuthorizationInterface::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['isAllowed'])
+            ->getMockForAbstractClass();
 
-    $this->orderMock = $this->getMockBuilder(Order::class)
-      ->disableOriginalConstructor()
-      ->setMethods(['isCanceled'])
-      ->getMock();
+        $this->orderMock = $this->getMockBuilder(Order::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['isCanceled'])
+            ->getMock();
 
-    $this->orderViewMock->expects($this->any())
-      ->method('getOrder')
-      ->willReturn($this->orderMock);
+        $this->orderViewMock->expects($this->any())
+            ->method('getOrder')
+            ->willReturn($this->orderMock);
 
-    $this->viewPlugin = $objectManager->getObject(
-      ViewPlugin::class,
-      [
-        '_helper' => $this->helperMock,
-        '_authorization' => $this->authorizationMock,
-      ]
-    );
-  }
+        $this->viewPlugin = $objectManager->getObject(
+            ViewPlugin::class,
+            [
+                '_helper' => $this->helperMock,
+                '_authorization' => $this->authorizationMock,
+            ]
+        );
+    }
 
-  public function testBeforeSetLayout() {
-    $this->helperMock->expects($this->any())
-      ->method('isOrderMessageEnabled')
-      ->willReturn(true);
+    public function testBeforeSetLayout()
+    {
+        $this->helperMock->expects($this->any())
+            ->method('isOrderMessageEnabled')
+            ->willReturn(true);
 
-    $this->authorizationMock->expects($this->any())
-      ->method('isAllowed')
-      ->willReturn(true);
+        $this->authorizationMock->expects($this->any())
+            ->method('isAllowed')
+            ->willReturn(true);
 
-    $this->orderMock->expects($this->any())
-      ->method('isCanceled')
-      ->willReturn(false);
+        $this->orderMock->expects($this->any())
+            ->method('isCanceled')
+            ->willReturn(false);
 
-    $this->orderViewMock->expects($this->once())
-      ->method('addButton')
-      ->willReturnSelf();
+        $this->orderViewMock->expects($this->once())
+            ->method('addButton')
+            ->willReturnSelf();
 
-    $this->viewPlugin->beforeSetLayout($this->orderViewMock);
-  }
+        $this->viewPlugin->beforeSetLayout($this->orderViewMock);
+    }
 
-  public function testBeforeSetLayoutWithoutAccess() {
-    $this->helperMock->expects($this->any())
-      ->method('isOrderMessageEnabled')
-      ->willReturn(true);
+    public function testBeforeSetLayoutWithoutAccess()
+    {
+        $this->helperMock->expects($this->any())
+            ->method('isOrderMessageEnabled')
+            ->willReturn(true);
 
-    $this->authorizationMock->expects($this->any())
-      ->method('isAllowed')
-      ->willReturn(false);
+        $this->authorizationMock->expects($this->any())
+            ->method('isAllowed')
+            ->willReturn(false);
 
-    $this->orderMock->expects($this->any())
-      ->method('isCanceled')
-      ->willReturn(false);
+        $this->orderMock->expects($this->any())
+            ->method('isCanceled')
+            ->willReturn(false);
 
-    $this->orderViewMock->expects($this->never())
-      ->method('addButton')
-      ->willReturnSelf();
+        $this->orderViewMock->expects($this->never())
+            ->method('addButton')
+            ->willReturnSelf();
 
-    $this->viewPlugin->beforeSetLayout($this->orderViewMock);
-  }
+        $this->viewPlugin->beforeSetLayout($this->orderViewMock);
+    }
 
-  public function testBeforeSetLayoutWithCanceledOrder() {
-    $this->helperMock->expects($this->any())
-      ->method('isOrderMessageEnabled')
-      ->willReturn(true);
+    public function testBeforeSetLayoutWithCanceledOrder()
+    {
+        $this->helperMock->expects($this->any())
+            ->method('isOrderMessageEnabled')
+            ->willReturn(true);
 
-    $this->authorizationMock->expects($this->any())
-      ->method('isAllowed')
-      ->willReturn(true);
+        $this->authorizationMock->expects($this->any())
+            ->method('isAllowed')
+            ->willReturn(true);
 
-    $this->orderMock->expects($this->any())
-      ->method('isCanceled')
-      ->willReturn(true);
+        $this->orderMock->expects($this->any())
+            ->method('isCanceled')
+            ->willReturn(true);
 
-    $this->orderViewMock->expects($this->never())
-      ->method('addButton')
-      ->willReturnSelf();
+        $this->orderViewMock->expects($this->never())
+            ->method('addButton')
+            ->willReturnSelf();
 
-    $this->viewPlugin->beforeSetLayout($this->orderViewMock);
-  }
+        $this->viewPlugin->beforeSetLayout($this->orderViewMock);
+    }
 }

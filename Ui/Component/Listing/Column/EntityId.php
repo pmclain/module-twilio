@@ -26,89 +26,97 @@ use Magento\Sales\Model\Order\ShipmentRepository;
 
 class EntityId extends Column
 {
-  const ORDER_ENTITY_TYPE_ID = 1;
-  const INVOICE_ENTITY_TYPE_ID = 2;
-  const SHIPMENT_ENTITY_TYPE_ID = 3;
+    const ORDER_ENTITY_TYPE_ID = 1;
+    const INVOICE_ENTITY_TYPE_ID = 2;
+    const SHIPMENT_ENTITY_TYPE_ID = 3;
 
-  /** @var \Magento\Sales\Model\OrderRepository */
-  protected $_orderRepository;
+    /** @var \Magento\Sales\Model\OrderRepository */
+    protected $_orderRepository;
 
-  /** @var \Magento\Sales\Model\Order\InvoiceRepository */
-  protected $_invoiceRepository;
+    /** @var \Magento\Sales\Model\Order\InvoiceRepository */
+    protected $_invoiceRepository;
 
-  /** @var \Magento\Sales\Model\Order\ShipmentRepository */
-  protected $_shipmentRepository;
+    /** @var \Magento\Sales\Model\Order\ShipmentRepository */
+    protected $_shipmentRepository;
 
-  public function __construct(
-    ContextInterface $context,
-    UiComponentFactory $uiComponentFactory,
-    OrderRepository $orderRepository,
-    InvoiceRepository $invoiceRepository,
-    ShipmentRepository $shipmentRepository,
-    array $components = [],
-    array $data = []
-  ) {
-    $this->_orderRepository = $orderRepository;
-    $this->_invoiceRepository = $invoiceRepository;
-    $this->_shipmentRepository = $shipmentRepository;
-    parent::__construct($context, $uiComponentFactory, $components, $data);
-  }
-
-  public function prepareDataSource(array $dataSource) {
-    if(isset($dataSource['data']['items'])) {
-      $fieldName = $this->getData('name');
-
-      foreach($dataSource['data']['items'] as &$item) {
-        $incrementId = $this->_getIncrementId($item['entity_id'], $item['entity_type_id']);
-        $item[$fieldName] = $incrementId;
-      }
+    public function __construct(
+        ContextInterface $context,
+        UiComponentFactory $uiComponentFactory,
+        OrderRepository $orderRepository,
+        InvoiceRepository $invoiceRepository,
+        ShipmentRepository $shipmentRepository,
+        array $components = [],
+        array $data = []
+    ) {
+        $this->_orderRepository = $orderRepository;
+        $this->_invoiceRepository = $invoiceRepository;
+        $this->_shipmentRepository = $shipmentRepository;
+        parent::__construct($context, $uiComponentFactory, $components, $data);
     }
 
-    return $dataSource;
-  }
+    public function prepareDataSource(array $dataSource)
+    {
+        if (isset($dataSource['data']['items'])) {
+            $fieldName = $this->getData('name');
 
-  protected function _getIncrementId($entityId, $entityTypeId) {
-    $incrementId = '';
+            foreach ($dataSource['data']['items'] as &$item) {
+                $incrementId = $this->_getIncrementId(
+                    $item['entity_id'],
+                    $item['entity_type_id']
+                );
+                $item[$fieldName] = $incrementId;
+            }
+        }
 
-    switch ($entityTypeId) {
-      case self::ORDER_ENTITY_TYPE_ID:
-        $incrementId = $this->_getOrderIncrementId($entityId);
-        break;
-      case self::INVOICE_ENTITY_TYPE_ID:
-        $incrementId = $this->_getInvoiceIncrementId($entityId);
-        break;
-      case self::SHIPMENT_ENTITY_TYPE_ID:
-        $incrementId = $this->_getShipmentIncrementId($entityId);
-        break;
+        return $dataSource;
     }
 
-    return $incrementId;
-  }
+    protected function _getIncrementId($entityId, $entityTypeId)
+    {
+        $incrementId = '';
 
-  protected function _getOrderIncrementId($id) {
-    $order = $this->_orderRepository->get($id);
-    try {
-      return $order->getIncrementId();
-    }catch(\Exception $e) {
-      return '';
-    }
-  }
+        switch ($entityTypeId) {
+            case self::ORDER_ENTITY_TYPE_ID:
+                $incrementId = $this->_getOrderIncrementId($entityId);
+                break;
+            case self::INVOICE_ENTITY_TYPE_ID:
+                $incrementId = $this->_getInvoiceIncrementId($entityId);
+                break;
+            case self::SHIPMENT_ENTITY_TYPE_ID:
+                $incrementId = $this->_getShipmentIncrementId($entityId);
+                break;
+        }
 
-  protected function _getInvoiceIncrementId($id) {
-    $invoice = $this->_invoiceRepository->get($id);
-    try {
-      return $invoice->getIncrementId();
-    }catch(\Exception $e) {
-      return '';
+        return $incrementId;
     }
-  }
 
-  protected function _getShipmentIncrementId($id) {
-    $shipment = $this->_shipmentRepository->get($id);
-    try {
-      return $shipment->getIncrementId();
-    }catch(\Exception $e) {
-      return '';
+    protected function _getOrderIncrementId($id)
+    {
+        $order = $this->_orderRepository->get($id);
+        try {
+            return $order->getIncrementId();
+        } catch (\Exception $e) {
+            return '';
+        }
     }
-  }
+
+    protected function _getInvoiceIncrementId($id)
+    {
+        $invoice = $this->_invoiceRepository->get($id);
+        try {
+            return $invoice->getIncrementId();
+        } catch (\Exception $e) {
+            return '';
+        }
+    }
+
+    protected function _getShipmentIncrementId($id)
+    {
+        $shipment = $this->_shipmentRepository->get($id);
+        try {
+            return $shipment->getIncrementId();
+        } catch (\Exception $e) {
+            return '';
+        }
+    }
 }

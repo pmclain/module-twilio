@@ -23,21 +23,22 @@ use Magento\Framework\View\Result\PageFactory;
 
 class Index extends Action
 {
-  /** @var \Magento\Framework\View\Result\PageFactory */
-  protected $resultPageFactory;
+    /** @var \Magento\Framework\View\Result\PageFactory */
+    protected $resultPageFactory;
 
-  public function __construct(
-    Context $context,
-    PageFactory $pageFactory
-  ) {
-    parent::__construct($context);
-    $this->resultPageFactory = $pageFactory;
-  }
+    public function __construct(
+        Context $context,
+        PageFactory $pageFactory
+    ) {
+        parent::__construct($context);
+        $this->resultPageFactory = $pageFactory;
+    }
 
-  public function execute() {
-    $resultPage = $this->resultPageFactory->create();
-    $resultPage->getConfig()->getTitle()->prepend(__('Twilio SMS Usage'));
+    public function execute()
+    {
+        $resultPage = $this->resultPageFactory->create();
+        $resultPage->getConfig()->getTitle()->prepend(__('Twilio SMS Usage'));
 
-    return $resultPage;
-  }
+        return $resultPage;
+    }
 }

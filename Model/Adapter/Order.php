@@ -22,55 +22,59 @@ use Magento\Sales\Model\Order as SalesOrder;
 
 class Order extends AdapterAbstract
 {
-  const ENTITY_TYPE_ID = 1;
+    const ENTITY_TYPE_ID = 1;
 
-  /**
-   * @param \Magento\Sales\Model\Order $order
-   * @return \Pmclain\Twilio\Model\Adapter\Order
-   */
-  public function sendOrderSms(SalesOrder $order) {
-    if(!$this->_helper->isOrderMessageEnabled()) { return $this; }
+    /**
+     * @param \Magento\Sales\Model\Order $order
+     * @return \Pmclain\Twilio\Model\Adapter\Order
+     */
+    public function sendOrderSms(SalesOrder $order)
+    {
+        if (!$this->_helper->isOrderMessageEnabled()) {
+            return $this;
+        }
 
-    $this->_message = $this->_messageTemplateParser->parseTemplate(
-      $this->_helper->getRawOrderMessage(),
-      $this->getOrderVariables($order)
-    );
+        $this->_message = $this->_messageTemplateParser->parseTemplate(
+            $this->_helper->getRawOrderMessage(),
+            $this->getOrderVariables($order)
+        );
 
-    //TODO: something needs to verify the phone number
-    //      and add country code
-    $this->_recipientPhone = '+1' . $order->getBillingAddress()->getTelephone();
+        //TODO: something needs to verify the phone number
+        //      and add country code
+        $this->_recipientPhone = '+1' . $order->getBillingAddress()->getTelephone();
 
-    try {
-      $result = $this->_sendSms();
-      $this->_smsStatus = $result->status;
-      $this->_hasError = false;
-    }catch (\Exception $e) {
-      $this->_logger->addCritical($e->getMessage());
-      $this->_smsStatus = $e->getMessage();
-      $this->_hasError = true;
+        try {
+            $result = $this->_sendSms();
+            $this->_smsStatus = $result->status;
+            $this->_hasError = false;
+        } catch (\Exception $e) {
+            $this->_logger->addCritical($e->getMessage());
+            $this->_smsStatus = $e->getMessage();
+            $this->_hasError = true;
+        }
+
+        $this->_logResult($order->getId(), self::ENTITY_TYPE_ID);
+
+        return $this;
     }
 
-    $this->_logResult($order->getId(), self::ENTITY_TYPE_ID);
+    /**
+     * @param \Magento\Sales\Model\Order $order
+     * @return array
+     */
+    protected function getOrderVariables($order)
+    {
+        $vars = [];
 
-    return $this;
-  }
+        $vars['order.increment_id'] = $order->getIncrementId();
+        $vars['order.qty'] = $order->getTotalQtyOrdered();
+        $vars['billing.firstname'] = $order->getBillingAddress()->getFirstname();
+        $vars['billing.lastname'] = $order->getBillingAddress()->getLastname();
+        $vars['order.grandtotal'] = $order->getGrandTotal(); //TODO: not properly formatted
+        $vars['storename'] = $this->_storeManager->getWebsite(
+            $this->_storeManager->getStore($order->getStoreId())->getWebsiteId()
+        )->getName();
 
-  /**
-   * @param \Magento\Sales\Model\Order $order
-   * @return array
-   */
-  protected function getOrderVariables($order) {
-    $vars = [];
-
-    $vars['order.increment_id'] = $order->getIncrementId();
-    $vars['order.qty'] = $order->getTotalQtyOrdered();
-    $vars['billing.firstname'] = $order->getBillingAddress()->getFirstname();
-    $vars['billing.lastname'] = $order->getBillingAddress()->getLastname();
-    $vars['order.grandtotal'] = $order->getGrandTotal(); //TODO: not properly formatted
-    $vars['storename'] = $this->_storeManager->getWebsite(
-        $this->_storeManager->getStore($order->getStoreId())->getWebsiteId()
-      )->getName();
-
-    return $vars;
-  }
+        return $vars;
+    }
 }

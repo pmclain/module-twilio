@@ -37,297 +37,301 @@ use Magento\Sales\Model\Order\Address;
 
 class SendTest extends \PHPUnit_Framework_TestCase
 {
-  /** @var \Pmclain\Twilio\Controller\Adminhtml\Shipment\Send */
-  protected $sendController;
+    /** @var \Pmclain\Twilio\Controller\Adminhtml\Shipment\Send */
+    protected $sendController;
 
-  /** @var \Magento\Backend\App\Action\Context|MockObject */
-  protected $contextMock;
+    /** @var \Magento\Backend\App\Action\Context|MockObject */
+    protected $contextMock;
 
-  /** @var \Magento\Sales\Api\ShipmentRepositoryInterface|MockObject */
-  protected $shipmentRepositoryMock;
+    /** @var \Magento\Sales\Api\ShipmentRepositoryInterface|MockObject */
+    protected $shipmentRepositoryMock;
 
-  /** @var \Psr\Log\LoggerInterface|MockObject */
-  protected $loggerMock;
+    /** @var \Psr\Log\LoggerInterface|MockObject */
+    protected $loggerMock;
 
-  /** @var \Magento\Framework\App\ResponseInterface|MockObject */
-  protected $responseMock;
+    /** @var \Magento\Framework\App\ResponseInterface|MockObject */
+    protected $responseMock;
 
-  /** @var \Magento\Framework\App\Request\Http|MockObject */
-  protected $requestMock;
+    /** @var \Magento\Framework\App\Request\Http|MockObject */
+    protected $requestMock;
 
-  /** @var \Magento\Framework\Message\Manager|MockObject */
-  protected $messageManagerMock;
+    /** @var \Magento\Framework\Message\Manager|MockObject */
+    protected $messageManagerMock;
 
-  /** @var \Magento\Sales\Model\Order\Shipment|MockObject */
-  protected $shipmentMock;
+    /** @var \Magento\Sales\Model\Order\Shipment|MockObject */
+    protected $shipmentMock;
 
-  /** @var \Magento\Backend\Model\Session|MockObject */
-  protected $sessionMock;
+    /** @var \Magento\Backend\Model\Session|MockObject */
+    protected $sessionMock;
 
-  /** @var \Magento\Backend\Helper\Data|MockObject */
-  protected $helperMock;
+    /** @var \Magento\Backend\Helper\Data|MockObject */
+    protected $helperMock;
 
-  /** @var \Magento\Backend\Model\View\Result\Redirect|MockObject */
-  protected $resultRedirectMock;
+    /** @var \Magento\Backend\Model\View\Result\Redirect|MockObject */
+    protected $resultRedirectMock;
 
-  /** @var \Magento\Framework\ObjectManager\ObjectManager|MockObject */
-  protected $objectManager;
+    /** @var \Magento\Framework\ObjectManager\ObjectManager|MockObject */
+    protected $objectManager;
 
-  /** @var \Pmclain\Twilio\Model\Adapter\Order\Shipment|MockObject */
-  protected $shipmentAdapterMock;
+    /** @var \Pmclain\Twilio\Model\Adapter\Order\Shipment|MockObject */
+    protected $shipmentAdapterMock;
 
-  /** @var \Magento\Sales\Model\Order\Address|MockObject */
-  protected $addressMock;
+    /** @var \Magento\Sales\Model\Order\Address|MockObject */
+    protected $addressMock;
 
-  protected function setUp() {
-    $objectManagerHelper = new \Magento\Framework\TestFramework\Unit\Helper\ObjectManager($this);
+    protected function setUp()
+    {
+        $objectManagerHelper = new \Magento\Framework\TestFramework\Unit\Helper\ObjectManager($this);
 
-    $this->contextMock = $this->getMockBuilder(Context::class)
-      ->disableOriginalConstructor()
-      ->setMethods([
-        'getRequest',
-        'getResponse',
-        'getMessageManager',
-        'getRedirect',
-        'getObjectManager',
-        'getSession',
-        'getHelper',
-        'getResultRedirectFactory',
-      ])
-      ->getMock();
+        $this->contextMock = $this->getMockBuilder(Context::class)
+            ->disableOriginalConstructor()
+            ->setMethods([
+                'getRequest',
+                'getResponse',
+                'getMessageManager',
+                'getRedirect',
+                'getObjectManager',
+                'getSession',
+                'getHelper',
+                'getResultRedirectFactory',
+            ])
+            ->getMock();
 
-    $this->shipmentRepositoryMock = $this->getMockBuilder(ShipmentRepositoryInterface::class)
-      ->getMockForAbstractClass();
+        $this->shipmentRepositoryMock = $this->getMockBuilder(ShipmentRepositoryInterface::class)
+            ->getMockForAbstractClass();
 
-    $this->loggerMock = $this->getMockBuilder(LoggerInterface::class)
-      ->getMockForAbstractClass();
+        $this->loggerMock = $this->getMockBuilder(LoggerInterface::class)
+            ->getMockForAbstractClass();
 
-    $resultRedirectFactory = $this->getMockBuilder(RedirectFactory::class)
-      ->disableOriginalConstructor()
-      ->setMethods(['create'])
-      ->getMock();
+        $resultRedirectFactory = $this->getMockBuilder(RedirectFactory::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['create'])
+            ->getMock();
 
-    $this->responseMock = $this->getMockBuilder(ResponseInterface::class)
-      ->disableOriginalConstructor()
-      ->setMethods(['setRedirect', 'sendResponse'])
-      ->getMock();
+        $this->responseMock = $this->getMockBuilder(ResponseInterface::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['setRedirect', 'sendResponse'])
+            ->getMock();
 
-    $this->requestMock = $this->getMockBuilder(Http::class)
-      ->disableOriginalConstructor()
-      ->getMock();
+        $this->requestMock = $this->getMockBuilder(Http::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
-    $this->messageManagerMock = $this->getMockBuilder(Manager::class)
-      ->disableOriginalConstructor()
-      ->setMethods(['addSuccessMessage', 'addErrorMessage'])
-      ->getMock();
+        $this->messageManagerMock = $this->getMockBuilder(Manager::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['addSuccessMessage', 'addErrorMessage'])
+            ->getMock();
 
-    $this->shipmentMock = $this->getMockBuilder(Shipment::class)
-      ->disableOriginalConstructor()
-      ->setMethods(['getEntityId', 'getShippingAddress'])
-      ->getMock();
+        $this->shipmentMock = $this->getMockBuilder(Shipment::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getEntityId', 'getShippingAddress'])
+            ->getMock();
 
-    $this->sessionMock = $this->getMockBuilder(Session::class)
-      ->disableOriginalConstructor()
-      ->setMethods(['setIsUrlNotice'])
-      ->getMock();
+        $this->sessionMock = $this->getMockBuilder(Session::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['setIsUrlNotice'])
+            ->getMock();
 
-    $this->helperMock = $this->getMockBuilder(Data::class)
-      ->disableOriginalConstructor()
-      ->setMethods(['getUrl'])
-      ->getMock();
+        $this->helperMock = $this->getMockBuilder(Data::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getUrl'])
+            ->getMock();
 
-    $this->resultRedirectMock = $this->getMockBuilder(Redirect::class)
-      ->disableOriginalConstructor()
-      ->getMock();
+        $this->resultRedirectMock = $this->getMockBuilder(Redirect::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
-    $this->shipmentAdapterMock = $this->getMockBuilder(ShipmentAdapter::class)
-      ->disableOriginalConstructor()
-      ->setMethods(['sendOrderSms'])
-      ->getMock();
+        $this->shipmentAdapterMock = $this->getMockBuilder(ShipmentAdapter::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['sendOrderSms'])
+            ->getMock();
 
-    $this->addressMock = $this->getMockBuilder(Address::class)
-      ->disableOriginalConstructor()
-      ->setMethods(['getSmsAlert'])
-      ->getMock();
+        $this->addressMock = $this->getMockBuilder(Address::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getSmsAlert'])
+            ->getMock();
 
-    $resultRedirectFactory->expects($this->any())
-      ->method('create')
-      ->willReturn($this->resultRedirectMock);
+        $resultRedirectFactory->expects($this->any())
+            ->method('create')
+            ->willReturn($this->resultRedirectMock);
 
-    $this->contextMock->expects($this->once())
-      ->method('getMessageManager')
-      ->willReturn($this->messageManagerMock);
+        $this->contextMock->expects($this->once())
+            ->method('getMessageManager')
+            ->willReturn($this->messageManagerMock);
 
-    $this->contextMock->expects($this->once())
-      ->method('getRequest')
-      ->willReturn($this->requestMock);
+        $this->contextMock->expects($this->once())
+            ->method('getRequest')
+            ->willReturn($this->requestMock);
 
-    $this->contextMock->expects($this->once())
-      ->method('getResponse')
-      ->willReturn($this->responseMock);
+        $this->contextMock->expects($this->once())
+            ->method('getResponse')
+            ->willReturn($this->responseMock);
 
-    $this->contextMock->expects($this->once())
-      ->method('getObjectManager')
-      ->willReturn($this->objectManager);
+        $this->contextMock->expects($this->once())
+            ->method('getObjectManager')
+            ->willReturn($this->objectManager);
 
-    $this->contextMock->expects($this->once())
-      ->method('getSession')
-      ->willReturn($this->sessionMock);
+        $this->contextMock->expects($this->once())
+            ->method('getSession')
+            ->willReturn($this->sessionMock);
 
-    $this->contextMock->expects($this->once())
-      ->method('getHelper')
-      ->willReturn($this->helperMock);
+        $this->contextMock->expects($this->once())
+            ->method('getHelper')
+            ->willReturn($this->helperMock);
 
-    $this->contextMock->expects($this->once())
-      ->method('getResultRedirectFactory')
-      ->willReturn($resultRedirectFactory);
+        $this->contextMock->expects($this->once())
+            ->method('getResultRedirectFactory')
+            ->willReturn($resultRedirectFactory);
 
-    $this->sendController = $objectManagerHelper->getObject(
-      Send::class,
-      [
-        'context' => $this->contextMock,
-        'request' => $this->requestMock,
-        'response' => $this->responseMock,
-        '_shipmentRepository' => $this->shipmentRepositoryMock,
-        '_shipmentAdapter' => $this->shipmentAdapterMock,
-        'logger' => $this->loggerMock,
-      ]
-    );
-  }
+        $this->sendController = $objectManagerHelper->getObject(
+            Send::class,
+            [
+                'context' => $this->contextMock,
+                'request' => $this->requestMock,
+                'response' => $this->responseMock,
+                '_shipmentRepository' => $this->shipmentRepositoryMock,
+                '_shipmentAdapter' => $this->shipmentAdapterMock,
+                'logger' => $this->loggerMock,
+            ]
+        );
+    }
 
-  public function testExecute() {
-    $shipmentId = '3';
+    public function testExecute()
+    {
+        $shipmentId = '3';
 
-    $this->requestMock->expects($this->once())
-      ->method('getParam')
-      ->willReturn($shipmentId);
+        $this->requestMock->expects($this->once())
+            ->method('getParam')
+            ->willReturn($shipmentId);
 
-    $this->resultRedirectMock->expects($this->once())
-      ->method('setPath')
-      ->with(
-        'sales/shipment/view',
-        ['shipment_id' => $shipmentId]
-      )
-      ->willReturnSelf();
+        $this->resultRedirectMock->expects($this->once())
+            ->method('setPath')
+            ->with(
+                'sales/shipment/view',
+                ['shipment_id' => $shipmentId]
+            )
+            ->willReturnSelf();
 
-    $this->shipmentRepositoryMock->expects($this->once())
-      ->method('get')
-      ->with($shipmentId)
-      ->willReturn($this->shipmentMock);
+        $this->shipmentRepositoryMock->expects($this->once())
+            ->method('get')
+            ->with($shipmentId)
+            ->willReturn($this->shipmentMock);
 
-    $this->shipmentMock->expects($this->once())
-      ->method('getEntityId')
-      ->willReturn($shipmentId);
+        $this->shipmentMock->expects($this->once())
+            ->method('getEntityId')
+            ->willReturn($shipmentId);
 
-    $this->shipmentMock->expects($this->once())
-      ->method('getShippingAddress')
-      ->willReturn($this->addressMock);
+        $this->shipmentMock->expects($this->once())
+            ->method('getShippingAddress')
+            ->willReturn($this->addressMock);
 
-    $this->addressMock->expects($this->once())
-      ->method('getSmsAlert')
-      ->willReturn('1');
+        $this->addressMock->expects($this->once())
+            ->method('getSmsAlert')
+            ->willReturn('1');
 
-    $this->shipmentAdapterMock->expects($this->once())
-      ->method('sendOrderSms')
-      ->with($this->shipmentMock)
-      ->willReturnSelf();
+        $this->shipmentAdapterMock->expects($this->once())
+            ->method('sendOrderSms')
+            ->with($this->shipmentMock)
+            ->willReturnSelf();
 
-    $this->messageManagerMock->expects($this->once())
-      ->method('addSuccessMessage')
-      ->with('The SMS has been sent.')
-      ->willReturnSelf();
+        $this->messageManagerMock->expects($this->once())
+            ->method('addSuccessMessage')
+            ->with('The SMS has been sent.')
+            ->willReturnSelf();
 
-    $this->resultRedirectMock->expects($this->once())
-      ->method('setPath')
-      ->with(
-        'sales/shipment/view',
-        ['shipment_id' => $shipmentId]
-      );
+        $this->resultRedirectMock->expects($this->once())
+            ->method('setPath')
+            ->with(
+                'sales/shipment/view',
+                ['shipment_id' => $shipmentId]
+            );
 
-    $this->assertEquals(
-      $this->resultRedirectMock,
-      $this->sendController->execute()
-    );
-  }
+        $this->assertEquals(
+            $this->resultRedirectMock,
+            $this->sendController->execute()
+        );
+    }
 
-  public function testExecuteWithoutSmsOptIn() {
-    $shipmentId = '3';
+    public function testExecuteWithoutSmsOptIn()
+    {
+        $shipmentId = '3';
 
-    $this->requestMock->expects($this->once())
-      ->method('getParam')
-      ->willReturn($shipmentId);
+        $this->requestMock->expects($this->once())
+            ->method('getParam')
+            ->willReturn($shipmentId);
 
-    $this->resultRedirectMock->expects($this->once())
-      ->method('setPath')
-      ->with(
-        'sales/shipment/view',
-        ['shipment_id' => $shipmentId]
-      )
-      ->willReturnSelf();
+        $this->resultRedirectMock->expects($this->once())
+            ->method('setPath')
+            ->with(
+                'sales/shipment/view',
+                ['shipment_id' => $shipmentId]
+            )
+            ->willReturnSelf();
 
-    $this->shipmentRepositoryMock->expects($this->once())
-      ->method('get')
-      ->with($shipmentId)
-      ->willReturn($this->shipmentMock);
+        $this->shipmentRepositoryMock->expects($this->once())
+            ->method('get')
+            ->with($shipmentId)
+            ->willReturn($this->shipmentMock);
 
-    $this->shipmentMock->expects($this->once())
-      ->method('getEntityId')
-      ->willReturn($shipmentId);
+        $this->shipmentMock->expects($this->once())
+            ->method('getEntityId')
+            ->willReturn($shipmentId);
 
-    $this->shipmentMock->expects($this->once())
-      ->method('getShippingAddress')
-      ->willReturn($this->addressMock);
+        $this->shipmentMock->expects($this->once())
+            ->method('getShippingAddress')
+            ->willReturn($this->addressMock);
 
-    $this->addressMock->expects($this->once())
-      ->method('getSmsAlert')
-      ->willReturn('0');
+        $this->addressMock->expects($this->once())
+            ->method('getSmsAlert')
+            ->willReturn('0');
 
-    $this->shipmentAdapterMock->expects($this->never())
-      ->method('sendOrderSms');
+        $this->shipmentAdapterMock->expects($this->never())
+            ->method('sendOrderSms');
 
-    $this->messageManagerMock->expects($this->once())
-      ->method('addErrorMessage')
-      ->with('The shipping telephone number did not opt-in for SMS notifications.')
-      ->willReturnSelf();
+        $this->messageManagerMock->expects($this->once())
+            ->method('addErrorMessage')
+            ->with('The shipping telephone number did not opt-in for SMS notifications.')
+            ->willReturnSelf();
 
-    $this->resultRedirectMock->expects($this->once())
-      ->method('setPath')
-      ->with(
-        'sales/shipment/view',
-        ['shipment_id' => $shipmentId]
-      );
+        $this->resultRedirectMock->expects($this->once())
+            ->method('setPath')
+            ->with(
+                'sales/shipment/view',
+                ['shipment_id' => $shipmentId]
+            );
 
-    $this->assertEquals(
-      $this->resultRedirectMock,
-      $this->sendController->execute()
-    );
-  }
+        $this->assertEquals(
+            $this->resultRedirectMock,
+            $this->sendController->execute()
+        );
+    }
 
-  public function testExecuteNoShipmentId() {
-    $this->requestMock->expects($this->once())
-      ->method('getParam')
-      ->willReturn(null);
+    public function testExecuteNoShipmentId()
+    {
+        $this->requestMock->expects($this->once())
+            ->method('getParam')
+            ->willReturn(null);
 
-    $this->shipmentRepositoryMock->expects($this->once())
-      ->method('get')
-      ->with(null)
-      ->willThrowException(
-        new \Magento\Framework\Exception\NoSuchEntityException(__('Requested entity doesn\'t exist'))
-      );
+        $this->shipmentRepositoryMock->expects($this->once())
+            ->method('get')
+            ->with(null)
+            ->willThrowException(
+                new \Magento\Framework\Exception\NoSuchEntityException(__('Requested entity doesn\'t exist'))
+            );
 
-    $this->messageManagerMock->expects($this->once())
-      ->method('addErrorMessage')
-      ->with('This shipment no longer exists.')
-      ->willReturnSelf();
+        $this->messageManagerMock->expects($this->once())
+            ->method('addErrorMessage')
+            ->with('This shipment no longer exists.')
+            ->willReturnSelf();
 
-    $this->resultRedirectMock->expects($this->once())
-      ->method('setPath')
-      ->with('sales/shipment/*')
-      ->willReturnSelf();
+        $this->resultRedirectMock->expects($this->once())
+            ->method('setPath')
+            ->with('sales/shipment/*')
+            ->willReturnSelf();
 
-    $this->assertEquals(
-      $this->resultRedirectMock,
-      $this->sendController->execute()
-    );
-  }
+        $this->assertEquals(
+            $this->resultRedirectMock,
+            $this->sendController->execute()
+        );
+    }
 }

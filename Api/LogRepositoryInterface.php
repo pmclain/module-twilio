@@ -19,11 +19,13 @@ namespace Pmclain\Twilio\Api;
 
 interface LogRepositoryInterface
 {
-  public function save(\Pmclain\Twilio\Api\Data\LogInterface $log);
+    public function save(\Pmclain\Twilio\Api\Data\LogInterface $log);
 
-  public function getById($logId);
+    public function getById($logId);
 
-  public function getList(\Magento\Framework\Api\SearchCriteriaInterface $searchCriteria);
+    public function getList(
+        \Magento\Framework\Api\SearchCriteriaInterface $searchCriteria
+    );
 
-  public function delete($logId);
+    public function delete($logId);
 }

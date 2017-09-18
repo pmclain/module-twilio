@@ -21,12 +21,13 @@ use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
 
 class Collection extends AbstractCollection
 {
-  protected $_idFieldName = 'id';
+    protected $_idFieldName = 'id';
 
-  protected function _construct() {
-    $this->_init(
-      \Pmclain\Twilio\Model\Log::class,
-      \Pmclain\Twilio\Model\ResourceModel\Log::class
-    );
-  }
+    protected function _construct()
+    {
+        $this->_init(
+            \Pmclain\Twilio\Model\Log::class,
+            \Pmclain\Twilio\Model\ResourceModel\Log::class
+        );
+    }
 }
