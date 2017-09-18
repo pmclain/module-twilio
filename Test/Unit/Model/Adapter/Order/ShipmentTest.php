@@ -210,7 +210,7 @@ class ShipmentTest extends \PHPUnit_Framework_TestCase
             ->method('getOrder')
             ->willReturn($this->orderMock);
 
-        $this->shipmentMock->expects($this->once())
+        $this->shipmentMock->expects($this->exactly(2))
             ->method('getTracks')
             ->willReturnSelf();
 
