@@ -24,119 +24,136 @@ use Magento\Framework\App\Config\ScopeConfigInterface;
 /** @codeCoverageIgnore */
 class DataTest extends \PHPUnit_Framework_TestCase
 {
-  /** @var \Magento\Framework\App\Config\ScopeConfigInterface|MockObject */
-  protected $scopeConfigMock;
+    /** @var \Magento\Framework\App\Config\ScopeConfigInterface|MockObject */
+    protected $scopeConfigMock;
 
-  /** @var \Pmclain\Twilio\Helper\Data */
-  protected $helper;
+    /** @var \Pmclain\Twilio\Helper\Data */
+    protected $helper;
 
-  protected function setUp() {
-    $objectManager = new \Magento\Framework\TestFramework\Unit\Helper\ObjectManager($this);
+    protected function setUp()
+    {
+        $objectManager = new \Magento\Framework\TestFramework\Unit\Helper\ObjectManager($this);
 
-    $this->scopeConfigMock = $this->getMockForAbstractClass(
-      ScopeConfigInterface::class,
-      [],
-      '',
-      true,
-      true,
-      true,
-      ['getValue']
-    );
+        $this->scopeConfigMock = $this->getMockForAbstractClass(
+            ScopeConfigInterface::class,
+            [],
+            '',
+            true,
+            true,
+            true,
+            ['getValue']
+        );
 
-    $this->helper = $objectManager->getObject(
-      Helper::class,
-      ['scopeConfig' => $this->scopeConfigMock]
-    );
-  }
+        $this->helper = $objectManager->getObject(
+            Helper::class,
+            ['scopeConfig' => $this->scopeConfigMock]
+        );
+    }
 
-  /**
-   * @dataProvider testIsTwilioEnabledDataProvider
-   * @param bool $result
-   */
-  public function testIsTwilioEnabled($result) {
-    $this->scopeConfigMock->expects($this->once())
-      ->method('getValue')
-      ->willReturn($result);
+    /**
+     * @dataProvider testIsTwilioEnabledDataProvider
+     * @param bool $result
+     */
+    public function testIsTwilioEnabled($result)
+    {
+        $this->scopeConfigMock->expects($this->once())
+            ->method('getValue')
+            ->willReturn($result);
 
-    $this->assertEquals(
-      $result,
-      $this->helper->isTwilioEnabled()
-    );
-  }
+        $this->assertEquals(
+            $result,
+            $this->helper->isTwilioEnabled()
+        );
+    }
 
-  public function testIsTwilioEnabledDataProvider() {
-    return [
-      [true], [false]
-    ];
-  }
+    public function testIsTwilioEnabledDataProvider()
+    {
+        return [
+            [true],
+            [false]
+        ];
+    }
 
-  /**
-   * @dataProvider testIsMessageEnabledDataProvider
-   * @param bool $moduleEnabled
-   * @param bool $messageEnabled
-   * @param bool $expectedResult
-   */
-  public function testIsOrderMessageEnabled($moduleEnabled, $messageEnabled, $expectedResult) {
-    $this->scopeConfigMock->expects($this->at(0))
-      ->method('getValue')
-      ->willReturn($messageEnabled);
+    /**
+     * @dataProvider testIsMessageEnabledDataProvider
+     * @param bool $moduleEnabled
+     * @param bool $messageEnabled
+     * @param bool $expectedResult
+     */
+    public function testIsOrderMessageEnabled(
+        $moduleEnabled,
+        $messageEnabled,
+        $expectedResult
+    ) {
+        $this->scopeConfigMock->expects($this->at(0))
+            ->method('getValue')
+            ->willReturn($messageEnabled);
 
-    $this->scopeConfigMock->expects($this->at(1))
-      ->method('getValue')
-      ->willReturn($moduleEnabled);
+        $this->scopeConfigMock->expects($this->at(1))
+            ->method('getValue')
+            ->willReturn($moduleEnabled);
 
-    $this->assertEquals(
-      $expectedResult,
-      $this->helper->isOrderMessageEnabled()
-    );
-  }
+        $this->assertEquals(
+            $expectedResult,
+            $this->helper->isOrderMessageEnabled()
+        );
+    }
 
-  /**
-   * @dataProvider testIsMessageEnabledDataProvider
-   * @param bool $moduleEnabled
-   * @param bool $messageEnabled
-   * @param bool $expectedResult
-   */
-  public function testIsInvoiceMessageEnabled($moduleEnabled, $messageEnabled, $expectedResult) {
-    $this->scopeConfigMock->expects($this->at(0))
-      ->method('getValue')
-      ->willReturn($messageEnabled);
+    /**
+     * @dataProvider testIsMessageEnabledDataProvider
+     * @param bool $moduleEnabled
+     * @param bool $messageEnabled
+     * @param bool $expectedResult
+     */
+    public function testIsInvoiceMessageEnabled(
+        $moduleEnabled,
+        $messageEnabled,
+        $expectedResult
+    ) {
+        $this->scopeConfigMock->expects($this->at(0))
+            ->method('getValue')
+            ->willReturn($messageEnabled);
 
-    $this->scopeConfigMock->expects($this->at(1))
-      ->method('getValue')
-      ->willReturn($moduleEnabled);
+        $this->scopeConfigMock->expects($this->at(1))
+            ->method('getValue')
+            ->willReturn($moduleEnabled);
 
-    $this->assertEquals(
-      $expectedResult,
-      $this->helper->isInvoiceMessageEnabled()
-    );
-  }
+        $this->assertEquals(
+            $expectedResult,
+            $this->helper->isInvoiceMessageEnabled()
+        );
+    }
 
-  /**
-   * @dataProvider testIsMessageEnabledDataProvider
-   * @param bool $moduleEnabled
-   * @param bool $messageEnabled
-   * @param bool $expectedResult
-   */
-  public function testIsShipmentMessageEnabled($moduleEnabled, $messageEnabled, $expectedResult) {
-    $this->scopeConfigMock->expects($this->at(0))
-      ->method('getValue')
-      ->willReturn($messageEnabled);
+    /**
+     * @dataProvider testIsMessageEnabledDataProvider
+     * @param bool $moduleEnabled
+     * @param bool $messageEnabled
+     * @param bool $expectedResult
+     */
+    public function testIsShipmentMessageEnabled(
+        $moduleEnabled,
+        $messageEnabled,
+        $expectedResult
+    ) {
+        $this->scopeConfigMock->expects($this->at(0))
+            ->method('getValue')
+            ->willReturn($messageEnabled);
 
-    $this->scopeConfigMock->expects($this->at(1))
-      ->method('getValue')
-      ->willReturn($moduleEnabled);
+        $this->scopeConfigMock->expects($this->at(1))
+            ->method('getValue')
+            ->willReturn($moduleEnabled);
 
-    $this->assertEquals(
-      $expectedResult,
-      $this->helper->isShipmentMessageEnabled()
-    );
-  }
+        $this->assertEquals(
+            $expectedResult,
+            $this->helper->isShipmentMessageEnabled()
+        );
+    }
 
-  public function testIsMessageEnabledDataProvider() {
-    return [
-      [true, true, true],
-      [false, true, false]
-    ];
-  }
+    public function testIsMessageEnabledDataProvider()
+    {
+        return [
+            [true, true, true],
+            [false, true, false]
+        ];
+    }
 }

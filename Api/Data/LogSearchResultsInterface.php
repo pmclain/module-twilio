@@ -21,7 +21,7 @@ use Magento\Framework\Api\SearchResultsInterface;
 
 interface LogSearchResultsInterface extends SearchResultsInterface
 {
-  public function getItems();
+    public function getItems();
 
-  public function setItems(array $items);
+    public function setItems(array $items);
 }

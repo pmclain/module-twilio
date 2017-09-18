@@ -28,93 +28,99 @@ use Pmclain\Twilio\Model\ResourceModel\Log\CollectionFactory;
 
 class LogRepository implements LogRepositoryInterface
 {
-  protected $_logResource;
+    protected $_logResource;
 
-  protected $_logFactory;
+    protected $_logFactory;
 
-  protected $_collectionFactory;
+    protected $_collectionFactory;
 
-  protected $_searchResultsFactory;
+    protected $_searchResultsFactory;
 
-  public function __construct(
-    LogResource $logResource,
-    LogFactory $logFactory,
-    CollectionFactory $collectionFactory,
-    LogSearchResultsInterfaceFactory $logSearchResultsFactory
-  ) {
-    $this->_logResource = $logResource;
-    $this->_logFactory = $logFactory;
-    $this->_collectionFactory = $collectionFactory;
-    $this->_searchResultsFactory = $logSearchResultsFactory;
-  }
-
-  public function save(LogInterface $log) {
-    $this->_logResource->save($log);
-    return $log->getId();
-  }
-
-  public function getById($logId) {
-    $log = $this->_logFactory->create();
-    $this->_logResource->load($log, $logId);
-    if (!$log->getId()) {
-      throw new NoSuchEntityException('Log entity does not exits.');
+    public function __construct(
+        LogResource $logResource,
+        LogFactory $logFactory,
+        CollectionFactory $collectionFactory,
+        LogSearchResultsInterfaceFactory $logSearchResultsFactory
+    ) {
+        $this->_logResource = $logResource;
+        $this->_logFactory = $logFactory;
+        $this->_collectionFactory = $collectionFactory;
+        $this->_searchResultsFactory = $logSearchResultsFactory;
     }
 
-    return $log;
-  }
-
-  public function getList(\Magento\Framework\Api\SearchCriteriaInterface $searchCriteria) {
-    $collection = $this->_collectionFactory->create();
-    foreach((array)$searchCriteria->getFilterGroups() as $group) {
-      $this->addFilterGroupToCollection($group, $collection);
+    public function save(LogInterface $log)
+    {
+        $this->_logResource->save($log);
+        return $log->getId();
     }
 
-    foreach((array)$searchCriteria->getSortOrders() as $sortOrder) {
-      $field = $sortOrder->getField();
-      $collection->addOrder(
-        $field,
-        $this->getDirection($sortOrder->getDirection())
-      );
+    public function getById($logId)
+    {
+        $log = $this->_logFactory->create();
+        $this->_logResource->load($log, $logId);
+        if (!$log->getId()) {
+            throw new NoSuchEntityException('Log entity does not exits.');
+        }
+
+        return $log;
     }
 
-    $collection->setCurPage($searchCriteria->getCurrentPage());
-    $collection->setPageSize($searchCriteria->getPageSize());
-    $collection->load();
-    $searchResults = $this->_searchResultsFactory->create();
-    $searchResults->setCriteria($searchCriteria);
+    public function getList(
+        \Magento\Framework\Api\SearchCriteriaInterface $searchCriteria
+    ) {
+        $collection = $this->_collectionFactory->create();
+        foreach ((array)$searchCriteria->getFilterGroups() as $group) {
+            $this->addFilterGroupToCollection($group, $collection);
+        }
 
-    $logs = [];
-    foreach($collection as $log) {
-      $logs[] = $log;
+        foreach ((array)$searchCriteria->getSortOrders() as $sortOrder) {
+            $field = $sortOrder->getField();
+            $collection->addOrder(
+                $field,
+                $this->getDirection($sortOrder->getDirection())
+            );
+        }
+
+        $collection->setCurPage($searchCriteria->getCurrentPage());
+        $collection->setPageSize($searchCriteria->getPageSize());
+        $collection->load();
+        $searchResults = $this->_searchResultsFactory->create();
+        $searchResults->setCriteria($searchCriteria);
+
+        $logs = [];
+        foreach ($collection as $log) {
+            $logs[] = $log;
+        }
+
+        $searchResults->setItems($logs);
+        $searchResults->setTotalCount($collection->getSize());
+
+        return $searchResults;
     }
 
-    $searchResults->setItems($logs);
-    $searchResults->setTotalCount($collection->getSize());
-
-    return $searchResults;
-  }
-
-  public function delete($logId) {
-    $log = $this->_logFactory->create();
-    $log->setId($logId);
-    if($this->_logResource->delete($log)) {
-      return true;
-    }
-    return false;
-  }
-
-  protected function addFilterGroupToCollection($group, $collection) {
-    $fields = [];
-    $conditions = [];
-
-    foreach($group->getFilters() as $filter) {
-      $condition = $filter->getConditionType() ? : 'eq';
-      $field = $filter->getField();
-      $value = $filter->getValue();
-      $fields[] = $field;
-      $conditions[] = [$condition => $value];
+    public function delete($logId)
+    {
+        $log = $this->_logFactory->create();
+        $log->setId($logId);
+        if ($this->_logResource->delete($log)) {
+            return true;
+        }
+        return false;
     }
 
-    $collection->addFieldToFilter($fields, $conditions);
-  }
+    protected function addFilterGroupToCollection($group, $collection)
+    {
+        $fields = [];
+        $conditions = [];
+
+        foreach ($group->getFilters() as $filter) {
+            $condition = $filter->getConditionType() ?: 'eq';
+            $field = $filter->getField();
+            $value = $filter->getValue();
+            $fields[] = $field;
+            $conditions[] = [$condition => $value];
+        }
+
+        $collection->addFieldToFilter($fields, $conditions);
+    }
 }

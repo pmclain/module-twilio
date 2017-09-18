@@ -26,42 +26,43 @@ use Magento\Framework\Controller\ResultFactory;
 
 class MassDelete extends Action
 {
-  /**
-   * Authorization level of a basic admin session
-   * @see _isAllowed()
-   */
-  const ADMIN_RESOURCE = 'Pmclain_Twilio::sms';
+    /**
+     * Authorization level of a basic admin session
+     * @see _isAllowed()
+     */
+    const ADMIN_RESOURCE = 'Pmclain_Twilio::sms';
 
-  protected $_filter;
+    protected $_filter;
 
-  protected $_logRepository;
+    protected $_logRepository;
 
-  protected $_collectionFactory;
+    protected $_collectionFactory;
 
-  public function __construct(
-    Context $context,
-    Filter $filter,
-    LogRepository $logRepository,
-    CollectionFactory $collectionFactory
-  ) {
-    $this->_filter = $filter;
-    $this->_logRepository = $logRepository;
-    $this->_collectionFactory = $collectionFactory;
-    parent::__construct($context);
-  }
-
-  public function execute() {
-    $collection = $this->_filter->getCollection($this->_collectionFactory->create());
-
-    $count = $collection->getSize();
-
-    foreach($collection->getAllIds() as $logId) {
-      $this->_logRepository->delete($logId);
+    public function __construct(
+        Context $context,
+        Filter $filter,
+        LogRepository $logRepository,
+        CollectionFactory $collectionFactory
+    ) {
+        $this->_filter = $filter;
+        $this->_logRepository = $logRepository;
+        $this->_collectionFactory = $collectionFactory;
+        parent::__construct($context);
     }
 
-    $this->messageManager->addSuccessMessage($count . __(' log item(s) have been deleted.'));
+    public function execute()
+    {
+        $collection = $this->_filter->getCollection($this->_collectionFactory->create());
 
-    $resultRedirect = $this->resultRedirectFactory->create();
-    return $resultRedirect->setPath('twilio/usage/');
-  }
+        $count = $collection->getSize();
+
+        foreach ($collection->getAllIds() as $logId) {
+            $this->_logRepository->delete($logId);
+        }
+
+        $this->messageManager->addSuccessMessage($count . __(' log item(s) have been deleted.'));
+
+        $resultRedirect = $this->resultRedirectFactory->create();
+        return $resultRedirect->setPath('twilio/usage/');
+    }
 }

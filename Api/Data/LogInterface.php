@@ -19,29 +19,29 @@ namespace Pmclain\Twilio\Api\Data;
 
 interface LogInterface
 {
-  public function getId();
+    public function getId();
 
-  public function getEntityId();
+    public function getEntityId();
 
-  public function getEntityTypeId();
+    public function getEntityTypeId();
 
-  public function getRecipientPhone();
+    public function getRecipientPhone();
 
-  public function getIsError();
+    public function getIsError();
 
-  public function getResult();
+    public function getResult();
 
-  public function getTimestamp();
+    public function getTimestamp();
 
-  public function setId($id);
+    public function setId($id);
 
-  public function setEntityId($entityId);
+    public function setEntityId($entityId);
 
-  public function setEntityTypeId($entityTypeId);
+    public function setEntityTypeId($entityTypeId);
 
-  public function setRecipientPhone($recipientPhone);
+    public function setRecipientPhone($recipientPhone);
 
-  public function setIsError($isError);
+    public function setIsError($isError);
 
-  public function setResult($result);
+    public function setResult($result);
 }

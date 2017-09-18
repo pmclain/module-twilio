@@ -26,86 +26,89 @@ use Magento\Sales\Model\Order\Invoice;
 
 class ViewTest extends \PHPUnit_Framework_TestCase
 {
-  /** @var \Pmclain\Twilio\Plugin\Sales\Block\Adminhtml\Order\Invoice\View */
-  protected $viewPlugin;
+    /** @var \Pmclain\Twilio\Plugin\Sales\Block\Adminhtml\Order\Invoice\View */
+    protected $viewPlugin;
 
-  /** @var \Pmclain\Twilio\Helper\Data|MockObject */
-  protected $helperMock;
+    /** @var \Pmclain\Twilio\Helper\Data|MockObject */
+    protected $helperMock;
 
-  /** @var \Magento\Sales\Block\Adminhtml\Order\Invoice\View|MockObject */
-  protected $invoiceViewMock;
+    /** @var \Magento\Sales\Block\Adminhtml\Order\Invoice\View|MockObject */
+    protected $invoiceViewMock;
 
-  /** @var \Magento\Framework\AuthorizationInterface|MockObject */
-  protected $authorizationMock;
+    /** @var \Magento\Framework\AuthorizationInterface|MockObject */
+    protected $authorizationMock;
 
-  /** @var \Magento\Sales\Model\Order\Invoice|MockObject */
-  protected $invoiceMock;
+    /** @var \Magento\Sales\Model\Order\Invoice|MockObject */
+    protected $invoiceMock;
 
-  protected function setUp() {
-    $objectManager = new \Magento\Framework\TestFramework\Unit\Helper\ObjectManager($this);
+    protected function setUp()
+    {
+        $objectManager = new \Magento\Framework\TestFramework\Unit\Helper\ObjectManager($this);
 
-    $this->helperMock = $this->getMockBuilder(Data::class)
-      ->disableOriginalConstructor()
-      ->setMethods(['isInvoiceMessageEnabled'])
-      ->getMock();
+        $this->helperMock = $this->getMockBuilder(Data::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['isInvoiceMessageEnabled'])
+            ->getMock();
 
-    $this->invoiceViewMock = $this->getMockBuilder(InvoiceView::class)
-      ->disableOriginalConstructor()
-      ->setMethods(['addButton', 'getInvoice'])
-      ->getMock();
+        $this->invoiceViewMock = $this->getMockBuilder(InvoiceView::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['addButton', 'getInvoice'])
+            ->getMock();
 
-    $this->authorizationMock = $this->getMockBuilder(AuthorizationInterface::class)
-      ->disableOriginalConstructor()
-      ->setMethods(['isAllowed'])
-      ->getMockForAbstractClass();
+        $this->authorizationMock = $this->getMockBuilder(AuthorizationInterface::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['isAllowed'])
+            ->getMockForAbstractClass();
 
-    $this->invoiceMock = $this->getMockBuilder(Invoice::class)
-      ->disableOriginalConstructor()
-      ->setMethods(['getId'])
-      ->getMock();
+        $this->invoiceMock = $this->getMockBuilder(Invoice::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getId'])
+            ->getMock();
 
-    $this->invoiceViewMock->expects($this->any())
-      ->method('getInvoice')
-      ->willReturn($this->invoiceMock);
+        $this->invoiceViewMock->expects($this->any())
+            ->method('getInvoice')
+            ->willReturn($this->invoiceMock);
 
-    $this->viewPlugin = $objectManager->getObject(
-      ViewPlugin::class,
-      [
-        '_helper' => $this->helperMock,
-        '_authorization' => $this->authorizationMock,
-      ]
-    );
-  }
+        $this->viewPlugin = $objectManager->getObject(
+            ViewPlugin::class,
+            [
+                '_helper' => $this->helperMock,
+                '_authorization' => $this->authorizationMock,
+            ]
+        );
+    }
 
-  public function testBeforeSetLayout() {
-    $this->helperMock->expects($this->any())
-      ->method('isInvoiceMessageEnabled')
-      ->willReturn(true);
+    public function testBeforeSetLayout()
+    {
+        $this->helperMock->expects($this->any())
+            ->method('isInvoiceMessageEnabled')
+            ->willReturn(true);
 
-    $this->authorizationMock->expects($this->any())
-      ->method('isAllowed')
-      ->willReturn(true);
+        $this->authorizationMock->expects($this->any())
+            ->method('isAllowed')
+            ->willReturn(true);
 
-    $this->invoiceViewMock->expects($this->once())
-      ->method('addButton')
-      ->willReturnSelf();
+        $this->invoiceViewMock->expects($this->once())
+            ->method('addButton')
+            ->willReturnSelf();
 
-    $this->viewPlugin->beforeSetLayout($this->invoiceViewMock);
-  }
+        $this->viewPlugin->beforeSetLayout($this->invoiceViewMock);
+    }
 
-  public function testBeforeSetLayoutWithoutAccess() {
-    $this->helperMock->expects($this->any())
-      ->method('isInvoiceMessageEnabled')
-      ->willReturn(true);
+    public function testBeforeSetLayoutWithoutAccess()
+    {
+        $this->helperMock->expects($this->any())
+            ->method('isInvoiceMessageEnabled')
+            ->willReturn(true);
 
-    $this->authorizationMock->expects($this->any())
-      ->method('isAllowed')
-      ->willReturn(false);
+        $this->authorizationMock->expects($this->any())
+            ->method('isAllowed')
+            ->willReturn(false);
 
-    $this->invoiceViewMock->expects($this->never())
-      ->method('addButton')
-      ->willReturnSelf();
+        $this->invoiceViewMock->expects($this->never())
+            ->method('addButton')
+            ->willReturnSelf();
 
-    $this->viewPlugin->beforeSetLayout($this->invoiceViewMock);
-  }
+        $this->viewPlugin->beforeSetLayout($this->invoiceViewMock);
+    }
 }

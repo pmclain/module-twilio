@@ -21,10 +21,11 @@ use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
 
 class Log extends AbstractDb
 {
-  /**
-   * @return void
-   */
-  protected function _construct() {
-    $this->_init('pmclain_twilio_log', 'id');
-  }
+    /**
+     * @return void
+     */
+    protected function _construct()
+    {
+        $this->_init('pmclain_twilio_log', 'id');
+    }
 }

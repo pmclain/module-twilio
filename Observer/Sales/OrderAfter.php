@@ -23,40 +23,42 @@ use Pmclain\Twilio\Model\Adapter\Order as OrderAdapter;
 
 class OrderAfter implements ObserverInterface
 {
-  /**
-   * @var \Pmclain\Twilio\Helper\Data
-   */
-  protected $_helper;
+    /**
+     * @var \Pmclain\Twilio\Helper\Data
+     */
+    protected $_helper;
 
-  /**
-   * @var \Pmclain\Twilio\Model\Adapter\Order
-   */
-  protected $_orderAdapter;
+    /**
+     * @var \Pmclain\Twilio\Model\Adapter\Order
+     */
+    protected $_orderAdapter;
 
-  public function __construct(
-    Helper $helper,
-    OrderAdapter $orderAdapter
-  ) {
-    $this->_helper = $helper;
-    $this->_orderAdapter = $orderAdapter;
-  }
-
-  /**
-   * @param \Magento\Framework\Event\Observer $observer
-   * @return \Magento\Framework\Event\Observer
-   */
-  public function execute(\Magento\Framework\Event\Observer $observer)
-  {
-    if(!$this->_helper->isTwilioEnabled()) { return $observer; }
-
-    $order = $observer->getOrder();
-
-    $billingAddress = $order->getBillingAddress();
-
-    if($billingAddress->getSmsAlert()) {
-      $this->_orderAdapter->sendOrderSms($order);
+    public function __construct(
+        Helper $helper,
+        OrderAdapter $orderAdapter
+    ) {
+        $this->_helper = $helper;
+        $this->_orderAdapter = $orderAdapter;
     }
 
-    return $observer;
-  }
+    /**
+     * @param \Magento\Framework\Event\Observer $observer
+     * @return \Magento\Framework\Event\Observer
+     */
+    public function execute(\Magento\Framework\Event\Observer $observer)
+    {
+        if (!$this->_helper->isTwilioEnabled()) {
+            return $observer;
+        }
+
+        $order = $observer->getOrder();
+
+        $billingAddress = $order->getBillingAddress();
+
+        if ($billingAddress->getSmsAlert()) {
+            $this->_orderAdapter->sendOrderSms($order);
+        }
+
+        return $observer;
+    }
 }
