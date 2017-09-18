@@ -63,7 +63,7 @@
         </field>
         <field id="message" translate="label" type="textarea" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Message</label>
-          <comment><![CDATA[Variables: {{shipment.qty}}, {{shipment.trackingnumber}}, {{shipment.increment_id}}, {{order.increment_id}}, {{order.qty}}, {{shipment.firstname}}, {{shipment.lastname}}, {{storename}}]]></comment>
+          <comment><![CDATA[Variables: {{shipment.qty}}, {{shipment.trackingnumber}}, {{shipment.trackinglink}}, {{shipment.increment_id}}, {{order.increment_id}}, {{order.qty}}, {{shipment.firstname}}, {{shipment.lastname}}, {{storename}}]]></comment>
         </field>
       </group>
       <group id="invoice" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
