@@ -28,114 +28,120 @@ use Twilio\Rest\ClientFactory as TwilioClientFactory;
 
 class Shipment extends AdapterAbstract
 {
-  const ENTITY_TYPE_ID = 3;
+    const ENTITY_TYPE_ID = 3;
 
-  /** @var CarrierFactory */
-  protected $carrierFactory;
+    /** @var CarrierFactory */
+    protected $carrierFactory;
 
-  public function __construct(
-      Helper $helper,
-      TwilioClientFactory $twilioClientFactory,
-      LoggerInterface $logger,
-      MessageTemplateParser $messageTemplateParser,
-      StoreManagerInterface $storeManager,
-      \Pmclain\Twilio\Model\LogRepository $logRepository,
-      \Pmclain\Twilio\Model\LogFactory $logFactory,
-      CarrierFactory $carrierFactory
-  ) {
-      parent::__construct($helper,
-          $twilioClientFactory,
-          $logger,
-          $messageTemplateParser,
-          $storeManager,
-          $logRepository,
-          $logFactory
-      );
-      $this->carrierFactory = $carrierFactory;
-  }
-
-    /**
-   * @param \Magento\Sales\Model\Order\Shipment $shipment
-   * @return \Pmclain\Twilio\Model\Adapter\Order\Shipment
-   */
-  public function sendOrderSms(SalesShipment $shipment) {
-    if(!$this->_helper->isShipmentMessageEnabled()) { return $this; }
-
-    $this->_message = $this->_messageTemplateParser->parseTemplate(
-      $this->_helper->getRawShipmentMessage(),
-      $this->getShipmentVariables($shipment)
-    );
-
-    $order = $shipment->getOrder();
-
-    //TODO: something needs to verify the phone number
-    //      and add country code
-    $this->_recipientPhone = '+1' . $order->getShippingAddress()->getTelephone();
-
-    try {
-      $result = $this->_sendSms();
-      $this->_smsStatus = $result->status;
-      $this->_hasError = false;
-    }catch (\Exception $e) {
-      $this->_logger->addCritical($e->getMessage());
-      $this->_smsStatus = $e->getMessage();
-      $this->_hasError = true;
+    public function __construct(
+        Helper $helper,
+        TwilioClientFactory $twilioClientFactory,
+        LoggerInterface $logger,
+        MessageTemplateParser $messageTemplateParser,
+        StoreManagerInterface $storeManager,
+        \Pmclain\Twilio\Model\LogRepository $logRepository,
+        \Pmclain\Twilio\Model\LogFactory $logFactory,
+        CarrierFactory $carrierFactory
+    ) {
+        parent::__construct(
+            $helper,
+            $twilioClientFactory,
+            $logger,
+            $messageTemplateParser,
+            $storeManager,
+            $logRepository,
+            $logFactory
+        );
+        $this->carrierFactory = $carrierFactory;
     }
 
-    $this->_logResult($order->getId(), self::ENTITY_TYPE_ID);
+    /**
+     * @param \Magento\Sales\Model\Order\Shipment $shipment
+     * @return \Pmclain\Twilio\Model\Adapter\Order\Shipment
+     */
+    public function sendOrderSms(SalesShipment $shipment)
+    {
+        if (!$this->_helper->isShipmentMessageEnabled()) {
+            return $this;
+        }
 
-    return $this;
-  }
+        $this->_message = $this->_messageTemplateParser->parseTemplate(
+            $this->_helper->getRawShipmentMessage(),
+            $this->getShipmentVariables($shipment)
+        );
 
-  /**
-   * @param \Magento\Sales\Model\Order\Shipment $shipment
-   * @return array
-   */
-  protected function getShipmentVariables($shipment) {
-    $vars = [];
+        $order = $shipment->getOrder();
 
-    $vars['shipment.qty'] = $shipment->getTotalQty();
-    $vars['shipment.trackingnumber'] = $this->getTrackingNumbersArray($shipment->getTracks());
-    $vars['shipment.trackinglink'] = $this->getTrackingLinks($shipment->getTracks());
-    $vars['shipment.increment_id'] = $shipment->getIncrementId();
-    $vars['order.increment_id'] = $shipment->getOrder()->getIncrementId();
-    $vars['order.qty'] = $shipment->getOrder()->getTotalQtyOrdered();
-    $vars['shipment.firstname'] = $shipment->getShippingAddress()->getLastname();
-    $vars['shipment.lastname'] = $shipment->getShippingAddress()->getLastname();
-    $vars['storename'] = $this->_storeManager->getWebsite(
-        $this->_storeManager->getStore($shipment->getOrder()->getStoreId())->getWebsiteId()
-      )->getName();
+        //TODO: something needs to verify the phone number
+        //      and add country code
+        $this->_recipientPhone = '+1' . $order->getShippingAddress()->getTelephone();
 
-    return $vars;
-  }
+        try {
+            $result = $this->_sendSms();
+            $this->_smsStatus = $result->status;
+            $this->_hasError = false;
+        } catch (\Exception $e) {
+            $this->_logger->addCritical($e->getMessage());
+            $this->_smsStatus = $e->getMessage();
+            $this->_hasError = true;
+        }
 
-  /**
-   * @param \Magento\Sales\Model\Order\Shipment\Track $items
-   * @return array
-   */
-  protected function getTrackingNumbersArray($items) {
-    $trackingNumbers = [];
-    foreach ($items as $item) {
-      $trackingNumbers[] = $item->getNumber();
+        $this->_logResult($order->getId(), self::ENTITY_TYPE_ID);
+
+        return $this;
     }
 
-    return $trackingNumbers;
-  }
+    /**
+     * @param \Magento\Sales\Model\Order\Shipment $shipment
+     * @return array
+     */
+    protected function getShipmentVariables($shipment)
+    {
+        $vars = [];
+
+        $vars['shipment.qty'] = $shipment->getTotalQty();
+        $vars['shipment.trackingnumber'] = $this->getTrackingNumbersArray($shipment->getTracks());
+        $vars['shipment.trackinglink'] = $this->getTrackingLinks($shipment->getTracks());
+        $vars['shipment.increment_id'] = $shipment->getIncrementId();
+        $vars['order.increment_id'] = $shipment->getOrder()->getIncrementId();
+        $vars['order.qty'] = $shipment->getOrder()->getTotalQtyOrdered();
+        $vars['shipment.firstname'] = $shipment->getShippingAddress()->getLastname();
+        $vars['shipment.lastname'] = $shipment->getShippingAddress()->getLastname();
+        $vars['storename'] = $this->_storeManager->getWebsite(
+            $this->_storeManager->getStore($shipment->getOrder()->getStoreId())->getWebsiteId()
+        )->getName();
+
+        return $vars;
+    }
 
     /**
-    * @param \Magento\Sales\Model\Order\Shipment\Track[] $tracks
-    * @return array
-    */
+     * @param \Magento\Sales\Model\Order\Shipment\Track $items
+     * @return array
+     */
+    protected function getTrackingNumbersArray($items)
+    {
+        $trackingNumbers = [];
+        foreach ($items as $item) {
+            $trackingNumbers[] = $item->getNumber();
+        }
+
+        return $trackingNumbers;
+    }
+
+    /**
+     * @param \Magento\Sales\Model\Order\Shipment\Track[] $tracks
+     * @return array
+     */
     protected function getTrackingLinks($tracks)
     {
-      $links = [];
-      foreach ($tracks as $track) {
-        if ($url = $this->getTrackUrl($track)) {
-            $links[] = $url;
+        $links = [];
+        foreach ($tracks as $track) {
+            if ($url = $this->getTrackUrl($track)) {
+                $links[] = $url;
+            }
         }
-      }
 
-      return $links;
+        return $links;
     }
 
     /**
