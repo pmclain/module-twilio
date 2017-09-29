@@ -2,19 +2,15 @@
   "name": "pmclain/module-twilio",
   "description": "Twilio SMS Notifications",
   "require": {
-    "php": "~5.5.0|~5.6.0|~7.0.0|~7.1.0",
-    "magento/framework": "~100.0.0|~100.1.0",
-    "magento/module-ui": "~100.0.0|~100.1.0",
-    "magento/module-config": "~100.0.0|~100.1.0",
-    "magento/module-checkout": "~100.0.0|~100.1.0",
-    "twilio/sdk": "5.4.*"
+    "php": "~5.6.0|~7.0.0|~7.1.0",
+    "magento/framework": "~100.0.0|~100.1.0|~100.2.0",
+    "magento/module-ui": "~100.0.0|~100.1.0|~100.2.0",
+    "magento/module-config": "~100.0.0|~100.1.0|~100.2.0",
+    "magento/module-checkout": "~100.0.0|~100.1.0|~100.2.0",
+    "twilio/sdk": "~5.15.0"
   },
   "type": "magento2-module",
-  "license": [
-    "OSL-3.0",
-    "AFL-3.0",
-    "GPL-3.0"
-  ],
+  "license": "GPL-3.0",
   "autoload": {
     "files": [ "registration.php" ],
     "psr-4": {
