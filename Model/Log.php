@@ -53,6 +53,14 @@ class Log extends AbstractModel implements IdentityInterface, LogInterface
     }
 
     /**
+     * @return string
+     */
+    public function getSid()
+    {
+        return $this->getData('sid');
+    }
+
+    /**
      * @return int
      */
     public function getEntityId()
@@ -95,9 +103,17 @@ class Log extends AbstractModel implements IdentityInterface, LogInterface
     /**
      * @return string
      */
-    public function getTimestamp()
+    public function getCreatedAt()
     {
-        return $this->getData('timestamp');
+        return $this->getData('created_at');
+    }
+
+    /**
+     * @return string
+     */
+    public function getUpdatedAt()
+    {
+        return $this->getData('updated_at');
     }
 
     /**
@@ -107,6 +123,15 @@ class Log extends AbstractModel implements IdentityInterface, LogInterface
     public function setId($id)
     {
         return $this->setData('id', $id);
+    }
+
+    /**
+     * @param string $sid
+     * @return $this
+     */
+    public function setSid($sid)
+    {
+        return $this->setData('sid', $sid);
     }
 
     /**
@@ -152,5 +177,14 @@ class Log extends AbstractModel implements IdentityInterface, LogInterface
     public function setResult($result)
     {
         return $this->setData('result', $result);
+    }
+
+    /**
+     * @param string $updatedAt
+     * @return $this
+     */
+    public function setUpdatedAt($updatedAt)
+    {
+        return $this->setData('updated_at', $updatedAt);
     }
 }
