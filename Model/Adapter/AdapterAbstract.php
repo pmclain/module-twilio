@@ -24,6 +24,7 @@ use Twilio\Rest\Client as TwilioClient;
 use Psr\Log\LoggerInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Pmclain\Twilio\Model\LogFactory;
+use Magento\Framework\UrlInterface;
 
 abstract class AdapterAbstract
 {
@@ -83,12 +84,18 @@ abstract class AdapterAbstract
     protected $entityId;
 
     /**
+     * @var UrlInterface
+     */
+    protected $urlBuilder;
+
+    /**
      * AdapterAbstract constructor.
      * @param Helper $helper
      * @param TwilioClientFactory $twilioClientFactory
      * @param LoggerInterface $logger
      * @param MessageTemplateParser $messageTemplateParser
      * @param StoreManagerInterface $storeManager
+     * @param UrlInterface $url
      */
     public function __construct(
         Helper $helper,
@@ -97,7 +104,8 @@ abstract class AdapterAbstract
         MessageTemplateParser $messageTemplateParser,
         StoreManagerInterface $storeManager,
         \Pmclain\Twilio\Model\LogRepository $logRepository,
-        \Pmclain\Twilio\Model\LogFactory $logFactory
+        \Pmclain\Twilio\Model\LogFactory $logFactory,
+        UrlInterface $url
     ) {
         $this->_helper = $helper;
         $this->_twilioClientFactory = $twilioClientFactory;
@@ -106,6 +114,7 @@ abstract class AdapterAbstract
         $this->_storeManager = $storeManager;
         $this->_twilioLogRepository = $logRepository;
         $this->_twilioLogFactory = $logFactory;
+        $this->urlBuilder = $url;
     }
 
     /**
@@ -123,7 +132,8 @@ abstract class AdapterAbstract
                 $this->_recipientPhone,
                 [
                     'from' => $this->_helper->getTwilioPhone(),
-                    'body' => $this->_message
+                    'body' => $this->_message,
+                    'statusCallback' => $this->urlBuilder->getUrl('twilio/webhook'),
                 ]
             );
 
@@ -133,14 +143,6 @@ abstract class AdapterAbstract
         }
 
         return $this;
-    }
-
-    /**
-     * @return \Twilio\Rest\Api\V2010\Account\MessageInstance
-     */
-    public function getSmsStatus()
-    {
-        return $this->_smsStatus;
     }
 
     /**

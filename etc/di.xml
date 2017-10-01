@@ -28,7 +28,7 @@
   </type>
   <type name="Magento\Checkout\Model\GuestPaymentInformationManagement">
     <plugin name="wms_twilio_model_guestpaymentinformationmanagement" type="Pmclain\Twilio\Plugin\Checkout\Model\GuestPaymentInformationManagement" sortOrder="10" />
-  </type>https://webkul.com/blog/cs-cart-msg91-sms-notification/
+  </type>
 
   <preference for="Pmclain\Twilio\Api\LogRepositoryInterface" type="Pmclain\Twilio\Model\LogRepository" />
   <preference for="Pmclain\Twilio\Api\Data\LogInterface" type="Pmclain\Twilio\Model\Log" />
