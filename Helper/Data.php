@@ -18,9 +18,9 @@
 namespace Pmclain\Twilio\Helper;
 
 use Magento\Framework\App\Helper\AbstractHelper;
+use Magento\Framework\App\Helper\Context;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Store\Model\ScopeInterface;
-use Magento\Framework\Encryption\EncryptorInterface;
 
 class Data extends AbstractHelper
 {
@@ -30,25 +30,19 @@ class Data extends AbstractHelper
     const SHIPMENT_CONFIG_PATH = 'sales_sms/shipment/';
 
     /**
-     * @var \Magento\Framework\Encryption\EncryptorInterface
-     */
-    protected $_encryptor;
-
-    /**
      * @var \Magento\Framework\App\Config\ScopeConfigInterface
      */
     protected $scopeConfig;
 
     /**
      * Data constructor.
-     * @param EncryptorInterface $encryptor
      * @param ScopeConfigInterface $scopeConfig
      */
     public function __construct(
-        EncryptorInterface $encryptor,
+        Context $context,
         ScopeConfigInterface $scopeConfig
     ) {
-        $this->_encryptor = $encryptor;
+        parent::__construct($context);
         $this->scopeConfig = $scopeConfig;
     }
 
@@ -82,11 +76,13 @@ class Data extends AbstractHelper
      */
     public function getAccountAuthToken()
     {
-        return $this->_encryptor->decrypt(
-            $this->scopeConfig->getValue(
-                self::GENERAL_CONFIG_PATH . 'auth_token',
-                ScopeInterface::SCOPE_STORE
-            )
+        $test = $this->scopeConfig->getValue(
+            self::GENERAL_CONFIG_PATH . 'auth_token',
+            ScopeInterface::SCOPE_STORE
+        );
+        return $this->scopeConfig->getValue(
+            self::GENERAL_CONFIG_PATH . 'auth_token',
+            ScopeInterface::SCOPE_STORE
         );
     }
 

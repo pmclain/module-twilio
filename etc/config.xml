@@ -34,5 +34,10 @@
 {{depend vat_id}}<br/>VAT: {{var vat_id}}{{/depend}}]]></html>
       </address_templates>
     </customer>
+    <sales_sms>
+      <general>
+        <auth_token backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
+      </general>
+    </sales_sms>
   </default>
 </config>
