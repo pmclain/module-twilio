@@ -24,6 +24,7 @@ use Twilio\Rest\Client as TwilioClient;
 use Psr\Log\LoggerInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Pmclain\Twilio\Model\LogFactory;
+use Magento\Framework\UrlInterface;
 
 abstract class AdapterAbstract
 {
@@ -58,20 +59,34 @@ abstract class AdapterAbstract
     protected $_messageTemplateParser;
 
     /**
-     * @var \Twilio\Rest\Api\V2010\Account\MessageInstance
-     */
-    protected $_smsStatus;
-
-    /**
-     * @var \Magento\Store\Model\StoreManagerInterface;
+     * @var \Magento\Store\Model\StoreManagerInterface
      */
     protected $_storeManager;
 
+    /**
+     * @var \Pmclain\Twilio\Model\LogRepository
+     */
     protected $_twilioLogRepository;
 
+    /**
+     * @var LogFactory
+     */
     protected $_twilioLogFactory;
 
-    protected $_hasError;
+    /**
+     * @var int
+     */
+    protected $entityTypeId = 0;
+
+    /**
+     * @var int
+     */
+    protected $entityId;
+
+    /**
+     * @var UrlInterface
+     */
+    protected $urlBuilder;
 
     /**
      * AdapterAbstract constructor.
@@ -80,6 +95,7 @@ abstract class AdapterAbstract
      * @param LoggerInterface $logger
      * @param MessageTemplateParser $messageTemplateParser
      * @param StoreManagerInterface $storeManager
+     * @param UrlInterface $url
      */
     public function __construct(
         Helper $helper,
@@ -88,7 +104,8 @@ abstract class AdapterAbstract
         MessageTemplateParser $messageTemplateParser,
         StoreManagerInterface $storeManager,
         \Pmclain\Twilio\Model\LogRepository $logRepository,
-        \Pmclain\Twilio\Model\LogFactory $logFactory
+        \Pmclain\Twilio\Model\LogFactory $logFactory,
+        UrlInterface $url
     ) {
         $this->_helper = $helper;
         $this->_twilioClientFactory = $twilioClientFactory;
@@ -97,10 +114,11 @@ abstract class AdapterAbstract
         $this->_storeManager = $storeManager;
         $this->_twilioLogRepository = $logRepository;
         $this->_twilioLogFactory = $logFactory;
+        $this->urlBuilder = $url;
     }
 
     /**
-     * @return \Twilio\Rest\Api\V2010\Account\MessageInstance
+     * @return $this
      */
     protected function _sendSms()
     {
@@ -109,28 +127,46 @@ abstract class AdapterAbstract
             'password' => $this->_helper->getAccountAuthToken()
         ]);
 
-        return $client->messages->create(
-            $this->_recipientPhone,
-            [
-                'from' => $this->_helper->getTwilioPhone(),
-                'body' => $this->_message
-            ]
-        );
+        try {
+            $result = $client->messages->create(
+                $this->_recipientPhone,
+                [
+                    'from' => $this->_helper->getTwilioPhone(),
+                    'body' => $this->_message,
+                    'statusCallback' => $this->urlBuilder->getUrl('twilio/webhook'),
+                ]
+            );
+
+            $this->logSuccess($result);
+        } catch (\Exception $e) {
+            $this->logError($e);
+        }
+
+        return $this;
     }
 
     /**
-     * @return \Twilio\Rest\Api\V2010\Account\MessageInstance
+     * @param \Twilio\Rest\Api\V2010\Account\MessageInstance $result
      */
-    public function getSmsStatus()
+    protected function logSuccess($result)
     {
-        return $this->_smsStatus;
+        $this->_logResult($result->status, $result->sid);
     }
 
     /**
-     * @param int $entityId
-     * @param int $entityTypeId
+     * @param \Exception $exception
      */
-    protected function _logResult($entityId, $entityTypeId)
+    protected function logError($exception)
+    {
+        $this->_logResult($exception->getMessage(), null, true);
+    }
+
+    /**
+     * @param string $status
+     * @param null|string $sid
+     * @param bool $error
+     */
+    protected function _logResult($status, $sid = null, $error = false)
     {
         if (!$this->_helper->isLogEnabled()) {
             return;
@@ -138,11 +174,12 @@ abstract class AdapterAbstract
 
         $log = $this->_twilioLogFactory->create();
 
-        $log->setEntityId($entityId);
-        $log->setEntityTypeId($entityTypeId);
+        $log->setEntityId($this->entityId);
+        $log->setEntityTypeId($this->entityTypeId);
         $log->setRecipientPhone($this->_recipientPhone);
-        $log->setIsError($this->_hasError);
-        $log->setResult($this->_smsStatus);
+        $log->setIsError($error);
+        $log->setResult($status);
+        $log->setSid($sid);
 
         $this->_twilioLogRepository->save($log);
     }

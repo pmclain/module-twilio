@@ -65,6 +65,17 @@ class LogRepository implements LogRepositoryInterface
         return $log;
     }
 
+    public function getBySid($sid)
+    {
+        $log = $this->_logFactory->create();
+        $this->_logResource->load($log, $sid, 'sid');
+        if (!$log->getId()) {
+            throw new NoSuchEntityException('Log entity does not exits.');
+        }
+
+        return $log;
+    }
+
     public function getList(
         \Magento\Framework\Api\SearchCriteriaInterface $searchCriteria
     ) {

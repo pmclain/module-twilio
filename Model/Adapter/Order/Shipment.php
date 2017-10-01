@@ -28,7 +28,10 @@ use Twilio\Rest\ClientFactory as TwilioClientFactory;
 
 class Shipment extends AdapterAbstract
 {
-    const ENTITY_TYPE_ID = 3;
+    /**
+     * @var int
+     */
+    protected $entityTypeId = 3;
 
     /** @var CarrierFactory */
     protected $carrierFactory;
@@ -76,17 +79,8 @@ class Shipment extends AdapterAbstract
         //      and add country code
         $this->_recipientPhone = '+1' . $order->getShippingAddress()->getTelephone();
 
-        try {
-            $result = $this->_sendSms();
-            $this->_smsStatus = $result->status;
-            $this->_hasError = false;
-        } catch (\Exception $e) {
-            $this->_logger->addCritical($e->getMessage());
-            $this->_smsStatus = $e->getMessage();
-            $this->_hasError = true;
-        }
-
-        $this->_logResult($order->getId(), self::ENTITY_TYPE_ID);
+        $this->entityId = $shipment->getId();
+        $this->_sendSms();
 
         return $this;
     }

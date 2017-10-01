@@ -24,6 +24,8 @@ use Magento\Framework\DB\Ddl\Table;
 
 class UpgradeSchema implements UpgradeSchemaInterface
 {
+    const LOG_TABLE = 'pmclain_twilio_log';
+
     public function upgrade(
         SchemaSetupInterface $setup,
         ModuleContextInterface $context
@@ -38,7 +40,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
 
         if (version_compare($context->getVersion(), '0.0.3') < 0) {
             $table = $installer->getConnection()
-                ->newTable($installer->getTable('pmclain_twilio_log'))
+                ->newTable($installer->getTable(self::LOG_TABLE))
                 ->addColumn(
                     'id',
                     Table::TYPE_INTEGER,
@@ -95,6 +97,30 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 ->setComment('Pmclain Twilio Log');
 
             $installer->getConnection()->createTable($table);
+        }
+
+        if (version_compare($context->getVersion(), '1.1.0') < 0) {
+            $installer->getConnection()->addColumn(
+                $installer->getConnection()->getTableName(self::LOG_TABLE),
+                'sid',
+                [
+                    'type' => Table::TYPE_TEXT,
+                    'nullable' => true,
+                    'comment' => 'Message SID',
+                    'after' => 'id',
+                ]
+            );
+            $installer->getConnection()->addColumn(
+                $installer->getConnection()->getTableName(self::LOG_TABLE),
+                'updated_at',
+                [
+                    'type' => Table::TYPE_TIMESTAMP,
+                    'nullable' => false,
+                    'default' => Table::TIMESTAMP_INIT,
+                    'comment' => 'Updated Timestamp',
+                    'after' => 'created_at',
+                ]
+            );
         }
 
         $setup->endSetup();

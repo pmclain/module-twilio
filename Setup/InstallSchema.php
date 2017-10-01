@@ -46,6 +46,13 @@ class InstallSchema implements InstallSchemaInterface
                 'ID'
             )
             ->addColumn(
+                'sid',
+                Table::TYPE_TEXT,
+                null,
+                ['nullable' => false],
+                'Message SID'
+            )
+            ->addColumn(
                 'entity_id',
                 Table::TYPE_INTEGER,
                 null,
@@ -86,6 +93,13 @@ class InstallSchema implements InstallSchemaInterface
                 null,
                 ['nullable' => false, 'default' => Table::TIMESTAMP_INIT],
                 'Entry Timestamp'
+            )
+            ->addColumn(
+                'updated_at',
+                Table::TYPE_TIMESTAMP,
+                null,
+                ['nullable' => false, 'default' => Table::TIMESTAMP_INIT],
+                'Updated Timestamp'
             )
             ->setComment('Pmclain Twilio Log');
 

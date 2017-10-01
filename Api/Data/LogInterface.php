@@ -21,6 +21,8 @@ interface LogInterface
 {
     public function getId();
 
+    public function getSid();
+
     public function getEntityId();
 
     public function getEntityTypeId();
@@ -31,9 +33,13 @@ interface LogInterface
 
     public function getResult();
 
-    public function getTimestamp();
+    public function getCreatedAt();
+
+    public function getUpdatedAt();
 
     public function setId($id);
+
+    public function setSid($sid);
 
     public function setEntityId($entityId);
 
@@ -44,4 +50,6 @@ interface LogInterface
     public function setIsError($isError);
 
     public function setResult($result);
+
+    public function setUpdatedAt($updatedAt);
 }

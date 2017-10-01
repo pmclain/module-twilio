@@ -155,10 +155,41 @@
           </item>
         </argument>
       </filterInput>
-      <filterRange name="timestamp" class="Magento\Ui\Component\Filters\Type\DateRange">
+      <filterRange name="created_at" class="Magento\Ui\Component\Filters\Type\DateRange">
         <argument name="data" xsi:type="array">
           <item name="config" xsi:type="array">
-            <item name="dataScope" xsi:type="string">timestamp</item>
+            <item name="dataScope" xsi:type="string">created_at</item>
+            <item name="label" xsi:type="string" translate="true">Created</item>
+            <item name="childDefaults" xsi:type="array">
+              <item name="provider" xsi:type="string">twilio_log_listing.twilio_log_listing.listing_top.listing_filters</item>
+            </item>
+          </item>
+        </argument>
+        <filterDate name="from">
+          <argument name="data" xsi:type="array">
+            <item name="config" xsi:type="array">
+              <item name="dataScope" xsi:type="string">from</item>
+              <item name="label" xsi:type="string" translate="true">from</item>
+              <item name="placeholder" xsi:type="string" translate="true">From</item>
+              <item name="dateFormat" xsi:type="string" translate="true">MM/dd/YYYY</item>
+            </item>
+          </argument>
+        </filterDate>
+        <filterDate name="to">
+          <argument name="data" xsi:type="array">
+            <item name="config" xsi:type="array">
+              <item name="dataScope" xsi:type="string">to</item>
+              <item name="label" xsi:type="string" translate="true">to</item>
+              <item name="placeholder" xsi:type="string" translate="true">To</item>
+              <item name="dateFormat" xsi:type="string" translate="true">MM/dd/YYYY</item>
+            </item>
+          </argument>
+        </filterDate>
+      </filterRange>
+      <filterRange name="updated_at">
+        <argument name="data" xsi:type="array">
+          <item name="config" xsi:type="array">
+            <item name="dataScope" xsi:type="string">updated_at</item>
             <item name="label" xsi:type="string" translate="true">Created</item>
             <item name="childDefaults" xsi:type="array">
               <item name="provider" xsi:type="string">twilio_log_listing.twilio_log_listing.listing_top.listing_filters</item>
@@ -330,13 +361,23 @@
         </item>
       </argument>
     </column>
-    <column name="timestamp" class="Magento\Ui\Component\Listing\Columns\Date">
+    <column name="created_at" class="Magento\Ui\Component\Listing\Columns\Date">
       <argument name="data" xsi:type="array">
         <item name="config" xsi:type="array">
           <item name="filter" xsi:type="string">dateRange</item>
           <item name="component" xsi:type="string">Magento_Ui/js/grid/columns/date</item>
           <item name="dataType" xsi:type="string">date</item>
           <item name="label" xsi:type="string" translate="true">Created</item>
+        </item>
+      </argument>
+    </column>
+    <column name="updated_at" class="Magento\Ui\Component\Listing\Columns\Date">
+      <argument name="data" xsi:type="array">
+        <item name="config" xsi:type="array">
+          <item name="filter" xsi:type="string">dateRange</item>
+          <item name="component" xsi:type="string">Magento_Ui/js/grid/columns/date</item>
+          <item name="dataType" xsi:type="string">date</item>
+          <item name="label" xsi:type="string" translate="true">Updated</item>
         </item>
       </argument>
     </column>
