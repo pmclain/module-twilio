@@ -58,20 +58,29 @@ abstract class AdapterAbstract
     protected $_messageTemplateParser;
 
     /**
-     * @var \Twilio\Rest\Api\V2010\Account\MessageInstance
-     */
-    protected $_smsStatus;
-
-    /**
-     * @var \Magento\Store\Model\StoreManagerInterface;
+     * @var \Magento\Store\Model\StoreManagerInterface
      */
     protected $_storeManager;
 
+    /**
+     * @var \Pmclain\Twilio\Model\LogRepository
+     */
     protected $_twilioLogRepository;
 
+    /**
+     * @var LogFactory
+     */
     protected $_twilioLogFactory;
 
-    protected $_hasError;
+    /**
+     * @var int
+     */
+    protected $entityTypeId = 0;
+
+    /**
+     * @var int
+     */
+    protected $entityId;
 
     /**
      * AdapterAbstract constructor.
@@ -100,7 +109,7 @@ abstract class AdapterAbstract
     }
 
     /**
-     * @return \Twilio\Rest\Api\V2010\Account\MessageInstance
+     * @return $this
      */
     protected function _sendSms()
     {
@@ -109,13 +118,21 @@ abstract class AdapterAbstract
             'password' => $this->_helper->getAccountAuthToken()
         ]);
 
-        return $client->messages->create(
-            $this->_recipientPhone,
-            [
-                'from' => $this->_helper->getTwilioPhone(),
-                'body' => $this->_message
-            ]
-        );
+        try {
+            $result = $client->messages->create(
+                $this->_recipientPhone,
+                [
+                    'from' => $this->_helper->getTwilioPhone(),
+                    'body' => $this->_message
+                ]
+            );
+
+            $this->logSuccess($result);
+        } catch (\Exception $e) {
+            $this->logError($e);
+        }
+
+        return $this;
     }
 
     /**
@@ -127,10 +144,27 @@ abstract class AdapterAbstract
     }
 
     /**
-     * @param int $entityId
-     * @param int $entityTypeId
+     * @param \Twilio\Rest\Api\V2010\Account\MessageInstance $result
      */
-    protected function _logResult($entityId, $entityTypeId)
+    protected function logSuccess($result)
+    {
+        $this->_logResult($result->status, $result->sid);
+    }
+
+    /**
+     * @param \Exception $exception
+     */
+    protected function logError($exception)
+    {
+        $this->_logResult($exception->getMessage(), null, true);
+    }
+
+    /**
+     * @param string $status
+     * @param null|string $sid
+     * @param bool $error
+     */
+    protected function _logResult($status, $sid = null, $error = false)
     {
         if (!$this->_helper->isLogEnabled()) {
             return;
@@ -138,11 +172,12 @@ abstract class AdapterAbstract
 
         $log = $this->_twilioLogFactory->create();
 
-        $log->setEntityId($entityId);
-        $log->setEntityTypeId($entityTypeId);
+        $log->setEntityId($this->entityId);
+        $log->setEntityTypeId($this->entityTypeId);
         $log->setRecipientPhone($this->_recipientPhone);
-        $log->setIsError($this->_hasError);
-        $log->setResult($this->_smsStatus);
+        $log->setIsError($error);
+        $log->setResult($status);
+        $log->setSid($sid);
 
         $this->_twilioLogRepository->save($log);
     }
