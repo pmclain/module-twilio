@@ -25,6 +25,7 @@ use Magento\Sales\Model\Order\Shipment as SalesShipment;
 use Magento\Shipping\Model\CarrierFactory;
 use Psr\Log\LoggerInterface;
 use Twilio\Rest\ClientFactory as TwilioClientFactory;
+use Magento\Framework\UrlInterface;
 
 class Shipment extends AdapterAbstract
 {
@@ -44,7 +45,8 @@ class Shipment extends AdapterAbstract
         StoreManagerInterface $storeManager,
         \Pmclain\Twilio\Model\LogRepository $logRepository,
         \Pmclain\Twilio\Model\LogFactory $logFactory,
-        CarrierFactory $carrierFactory
+        CarrierFactory $carrierFactory,
+        UrlInterface $urlBuilder
     ) {
         parent::__construct(
             $helper,
@@ -53,7 +55,8 @@ class Shipment extends AdapterAbstract
             $messageTemplateParser,
             $storeManager,
             $logRepository,
-            $logFactory
+            $logFactory,
+            $urlBuilder
         );
         $this->carrierFactory = $carrierFactory;
     }
